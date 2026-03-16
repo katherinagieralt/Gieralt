@@ -8,7 +8,7 @@ import { SEO } from "./SEO";
 import { ScrollProgress } from "./ScrollProgress";
 import { FloatingCTA } from "./FloatingCTA";
 import { About } from "./About";
-import { PersonalizedGreeting } from "./PersonalizedGreeting";
+
 import { useEffect } from "react";
 
 // Lazy load heavy components
@@ -138,7 +138,7 @@ export function LandingPage() {
         <CookieBanner />
         <FloatingCTA onOpenCalendly={() => setIsCalendlyOpen(true)} />
         <ExitIntentPopup />
-        <PersonalizedGreeting />
+
       </Suspense>
     </main>
   );

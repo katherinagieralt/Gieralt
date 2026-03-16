@@ -3,55 +3,14 @@ import { ArrowRight, CheckCircle } from "lucide-react";
 import { useAnalytics } from "./AnalyticsProvider";
 import { useTranslation } from "react-i18next";
 import { useRef, useState, useEffect } from "react";
-import { generatePersonalizedHeroMessage } from "../services/aiLeadService";
+
 
 export function Hero() {
   const { trackEvent } = useAnalytics();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   
   const currentMonth = new Date().toLocaleString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', { month: 'long' });
   
-  // A/B Test Logic
-  const [variant] = useState(() => {
-    const savedVariant = localStorage.getItem("hero_variant");
-    if (savedVariant) return savedVariant;
-    const newVariant = Math.random() > 0.5 ? "variant_a" : "variant_b";
-    localStorage.setItem("hero_variant", newVariant);
-    trackEvent('hero_variant_assigned', { variant: newVariant });
-    return newVariant;
-  });
-
-  const [aiData, setAiData] = useState<{ title: string, subtitle: string, cta: string } | null>(null);
-
-  useEffect(() => {
-    const fetchAiPersonalization = async () => {
-      const behaviorStr = localStorage.getItem("user_behavior");
-      if (!behaviorStr) return;
-      
-      const behavior = JSON.parse(behaviorStr);
-      if (behavior.visitedSections && behavior.visitedSections.length >= 2) {
-        // Only run once per session to avoid UI jumps and rate limits
-        if (sessionStorage.getItem("hero_ai_loaded")) {
-          const savedStr = sessionStorage.getItem("hero_ai_data");
-          if (savedStr) setAiData(JSON.parse(savedStr));
-          return;
-        }
-
-        const result = await generatePersonalizedHeroMessage(behavior);
-        if (result) {
-          setAiData(result);
-          sessionStorage.setItem("hero_ai_loaded", "true");
-          sessionStorage.setItem("hero_ai_data", JSON.stringify(result));
-          trackEvent('hero_ai_personalized', { sections: behavior.visitedSections.join(",") });
-        }
-      }
-    };
-    
-    // Slight delay to not block the main thread directly on load
-    const timer = setTimeout(fetchAiPersonalization, 1000);
-    return () => clearTimeout(timer);
-  }, [trackEvent]);
-
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -89,7 +48,7 @@ export function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            {t("hero.availability", { month: currentMonth })}
+            {i18n.language === 'pl' ? `Dostępność w: ${currentMonth}` : `Available in: ${currentMonth}`}
           </motion.div>
 
           <motion.h1
@@ -98,14 +57,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tighter mb-6 text-slate-900 dark:text-white leading-[1.05]"
           >
-            {aiData ? (
-              <span dangerouslySetInnerHTML={{ __html: aiData.title }} />
-            ) : (
-              <>
-                <span dangerouslySetInnerHTML={{ __html: t(`hero.${variant}.title`) }} /> <br className="hidden sm:block" />
-                <span dangerouslySetInnerHTML={{ __html: t(`hero.${variant}.subtitle`) }} />
-              </>
-            )}
+            Landing page klasy <strong>Premium</strong> w 7 dni. <br className="hidden sm:block" />
+            Szybkość <strong>AI</strong>, precyzja Eksperta.
           </motion.h1>
 
           <motion.p
@@ -114,7 +67,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto font-light"
           >
-            {aiData ? aiData.subtitle : t("hero.description")}
+            Dla firm, które nie mają czasu na miesiące wdrożeń. Łączę 10 lat doświadczenia w UX z wydajnością sztucznej inteligencji, by dostarczyć Twój projekt 3x szybciej bez utraty jakości.
           </motion.p>
 
           <motion.div
@@ -124,11 +77,11 @@ export function Hero() {
             className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
           >
             <button 
-              onClick={() => trackEvent('hero_cta_click', { label: aiData ? aiData.cta : 'Sprawdź dostępność' })}
+              onClick={() => trackEvent('hero_cta_click', { label: 'Sprawdź dostępność' })}
               className="group relative inline-flex items-center justify-center px-10 py-5 text-sm uppercase tracking-widest font-bold text-white transition-all duration-300 bg-rose-500 rounded-full hover:bg-rose-600 hover:shadow-2xl hover:shadow-rose-500/20 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 dark:focus:ring-offset-slate-900 w-full sm:w-auto overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-3">
-                {aiData ? aiData.cta : t("hero.cta_primary")}
+                Sprawdź dostępność w tym miesiącu
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
               {/* Subtle shine effect */}
@@ -138,7 +91,7 @@ export function Hero() {
               <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CheckCircle className="h-4 w-4 text-emerald-500" />
               </div>
-              {t("hero.cta_secondary")}
+              Zaprojektujmy Twój sukces
             </button>
           </motion.div>
 

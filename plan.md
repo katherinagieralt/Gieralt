@@ -507,8 +507,8 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Personalizacja doświadczenia użytkownika i zaawansowana analityka SEO
 
 ### Zadania:
-- [x] Personalizacja treści strony głównej na podstawie zachowania użytkownika (AI)
-- [ ] Zaawansowany system rekomendacji projektów w portfolio (AI)
+- [ ] ~~Personalizacja treści strony głównej na podstawie zachowania użytkownika (AI)~~ (Anulowano - powrót do statycznej treści)
+- [ ] ~~Zaawansowany system rekomendacji projektów w portfolio (AI)~~ (Anulowano)
 - [ ] Integracja z Google Search Console API dla monitoringu SEO w dashboardzie
 - [ ] AI-powered A/B testing suggestions dla landing page'y
 - [ ] Rozbudowa systemu powiadomień o interaktywne akcje (np. akceptacja raportu z Slacka)
