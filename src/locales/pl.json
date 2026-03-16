@@ -1,0 +1,26 @@
+{
+  "header": {
+    "about": "O Mnie",
+    "process": "Proces",
+    "portfolio": "Portfolio",
+    "pricing": "Cennik",
+    "blog": "Blog",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "cta": "Umów rozmowę"
+  },
+  "hero": {
+    "availability": "Dostępne terminy na {{month}}",
+    "variant_a": {
+      "title": "Przestań Tracić Klientów Przez <span class=\"text-gradient\">Słabą Stronę.</span>",
+      "subtitle": "Zbuduję Maszynę do Sprzedaży, Która <span class=\"text-gradient\">Dowozi Wyniki.</span>"
+    },
+    "variant_b": {
+      "title": "Twoja Strona <span class=\"text-gradient\">Nie Sprzedaje?</span>",
+      "subtitle": "Zaprojektuję Ścieżkę Konwersji, Którą Twoi Klienci <span class=\"text-gradient\">Pokochają.</span>"
+    },
+    "description": "Odzyskaj czas i przestań przepalać budżet. Jako UX/UI Designer & AI-Powered Strategist łączę 10 lat doświadczenia z precyzją sztucznej inteligencji. Tworzę strony, które nie tylko wyglądają premium, ale przede wszystkim zarabiają.",
+    "cta_primary": "Umów Bezpłatną Konsultację",
+    "cta_secondary": "Gwarancja satysfakcji"
+  }
+}

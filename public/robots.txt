@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://katarzynagieralt.pl/sitemap.xml
