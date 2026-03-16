@@ -27,25 +27,6 @@ export const db = import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID
 // Initialize Auth
 export const auth = getAuth(app);
 
-// Test connection
-async function testConnection() {
-  if (!import.meta.env.VITE_FIREBASE_API_KEY) {
-    console.error("Firebase config is missing in environment variables. Make sure your .env file has VITE_FIREBASE_* variables.");
-    return;
-  }
 
-  try {
-    // Try to read a non-existent document to test connectivity
-    await getDocFromServer(doc(db, 'test', 'connection'));
-    console.log('Firebase connection successful');
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.error("Firebase connection failed: Client is offline. Please check your network or Firebase configuration.");
-    } else {
-      // Ignore other errors (like permission denied) as we just want to test connectivity
-      // console.log('Firebase connection test result:', error);
-    }
-  }
-}
-
-testConnection();
+// Connection test removed for performance. 
+// Firebase is initialized lazily or via React Query hooks.

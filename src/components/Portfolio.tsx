@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowUpRight, Layout, Smartphone, ShoppingCart, Loader2 } from "lucide-react";
 import { db } from "../firebase";
-import { collection, getDocs, query, orderBy, Timestamp, limit } from "firebase/firestore";
+import { collection, query, orderBy, Timestamp, limit } from "firebase/firestore";
 import { useAnalytics } from "./AnalyticsProvider";
 import { ImageWithBlur } from "./ImageWithBlur";
+import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
 
 type Category = "Wszystkie" | "SaaS" | "FinTech" | "eCommerce" | "AI Tools" | "Mobile App";
 
@@ -102,103 +103,15 @@ function ProjectCard({ project, trackEvent }: ProjectCardProps) {
 }
 
 export function Portfolio() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: projects = [], isLoading } = useFirestoreQuery<Project>(['portfolioItems'], 'portfolioItems', [orderBy('createdAt', 'desc'), limit(12)]);
   const [filter, setFilter] = useState<Category>("Wszystkie");
   const { trackEvent } = useAnalytics();
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const q = query(collection(db, "portfolioItems"), orderBy("createdAt", "desc"), limit(12));
-        const querySnapshot = await getDocs(q);
-        
-        let fetchedProjects: Project[] = [];
-
-        if (querySnapshot.empty) {
-          // Fallback static data if database is empty
-          fetchedProjects = [
-            {
-              id: "1",
-              title: "FinFlow Dashboard",
-              category: "FinTech",
-              description: "Redesign panelu klienta dla bankowości mobilnej. Wzrost retencji o 15%.",
-              image: "https://picsum.photos/seed/fintech/800/600",
-              link: "#",
-              tags: ["Dashboard", "Mobile", "Banking"],
-              createdAt: Timestamp.now(),
-              beforeAfter: {
-                before: "Skomplikowany proces logowania, wysoki churn rate",
-                after: "Uproszczony UX, wzrost retencji o 15%, ocena 4.8 w App Store"
-              }
-            },
-            {
-              id: "2",
-              title: "SaaS Analytics",
-              category: "SaaS",
-              description: "Platforma analityczna B2B. Uproszczenie onboardingu skróciło czas aktywacji o 40%.",
-              image: "https://picsum.photos/seed/saas/800/600",
-              link: "#",
-              tags: ["Analytics", "B2B", "Onboarding"],
-              createdAt: Timestamp.now(),
-              beforeAfter: {
-                before: "Onboarding trwający 15 minut, 60% porzuceń",
-                after: "Onboarding skrócony do 4 minut, wzrost aktywacji o 40%"
-              }
-            },
-            {
-              id: "3",
-              title: "Sklep Premium",
-              category: "eCommerce",
-              description: "Redesign checkoutu dla marki odzieżowej. Redukcja porzuceń koszyka o 35%.",
-              image: "https://picsum.photos/seed/ecommerce/800/600",
-              link: "#",
-              tags: ["SHOPIFY", "KONWERSJA", "RWD"],
-              createdAt: Timestamp.now(),
-              beforeAfter: {
-                before: "Zbyt długi checkout, brak optymalizacji mobile",
-                after: "Redukcja porzuceń koszyka o 35%, wzrost sprzedaży mobile o 50%"
-              }
-            },
-            {
-              id: "4",
-              title: "AI Content Tool",
-              category: "AI Tools",
-              description: "Narzędzie do generowania treści marketingowych z wykorzystaniem LLM.",
-              image: "https://picsum.photos/seed/aitool/800/600",
-              link: "#",
-              tags: ["AI", "LLM", "SaaS"],
-              createdAt: Timestamp.now(),
-              beforeAfter: {
-                before: "Brak spójnego UI, trudna nawigacja",
-                after: "Intuicyjny edytor, 10k aktywnych użytkowników w 2 miesiące"
-              }
-            }
-          ];
-        } else {
-          fetchedProjects = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          })) as Project[];
-        }
-        
-        setProjects(fetchedProjects);
-
-      } catch (error) {
-        console.error("Error fetching portfolio items:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
 
   const filteredProjects = projects.filter(
     (project) => filter === "Wszystkie" || project.category === filter
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="py-16 bg-white dark:bg-slate-950 flex items-center justify-center transition-colors duration-300">
         <Loader2 className="h-8 w-8 text-rose-500 animate-spin" />

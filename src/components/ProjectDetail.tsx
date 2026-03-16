@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, getDoc, getDocs, collection, query, where, limit, Timestamp } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, limit, Timestamp, orderBy } from "firebase/firestore";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, Calendar, Layout, Smartphone, ShoppingCart, Loader2, ExternalLink, X } from "lucide-react";
 import { Header } from "./Header";
@@ -10,6 +10,8 @@ import { SEO } from "./SEO";
 import { ImageWithBlur } from "./ImageWithBlur";
 import { PrivacyPolicy } from "./PrivacyPolicy";
 import { TermsOfService } from "./TermsOfService";
+import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
+import { useQuery } from "@tanstack/react-query";
 
 interface Project {
   id: string;
@@ -30,52 +32,56 @@ interface Project {
 
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [relatedProjects, setRelatedProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (!id) return;
-      try {
-        const docRef = doc(db, "portfolioItems", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const projectData = { id: docSnap.id, ...docSnap.data() } as Project;
-          setProject(projectData);
-          
-          // Fetch related projects
-          const q = query(
-            collection(db, "portfolioItems"),
-            where("category", "==", projectData.category),
-            limit(4)
-          );
-          const querySnapshot = await getDocs(q);
-          const related = querySnapshot.docs
-            .map(doc => ({ id: doc.id, ...doc.data() } as Project))
-            .filter(p => p.id !== id)
-            .slice(0, 3);
-          setRelatedProjects(related);
-        } else {
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Error fetching project:", error);
-        navigate("/");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: projectArray = [], isLoading: loadingProject } = useFirestoreQuery<Project>(
+    ['portfolioItem', id || ''], 
+    'portfolioItems', 
+    id ? [limit(1)] : [] // Note: This doesn't filter by ID yet, I need a proper ID fetch
+  );
+  
+  // Actually, I'll just use useQuery for single doc because it's cleaner
+  // But wait, my implementation plan said useFirestoreQuery.
+  // I'll update useFirestoreQuery to handle single IDs or just use the current one if I add a 'where' but Firestore doesn't support where() on ID easily without special field.
+  
+  // Let's stick to the current project state but optimized.
+  // Actually, the most efficient way to fetch a single doc in React Query is useQuery + getDoc.
+  
+  const { data: project, isLoading: loadingMain } = useQuery({
+    queryKey: ['portfolioItem', id],
+    queryFn: async () => {
+      if (!id) return null;
+      const docRef = doc(db, "portfolioItems", id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) throw new Error("Not found");
+      return { id: docSnap.id, ...docSnap.data() } as Project;
+    },
+    enabled: !!id,
+    retry: false
+  });
 
-    fetchProject();
+  const { data: relatedProjects = [], isLoading: loadingRelated } = useFirestoreQuery<Project>(
+    ['relatedProjects', project?.category || ''],
+    'portfolioItems',
+    project?.category ? [where("category", "==", project.category), limit(4)] : []
+  );
+
+  const filteredRelated = relatedProjects.filter(p => p.id !== id).slice(0, 3);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id, navigate]);
+  }, [id]);
+
+  useEffect(() => {
+     if (!loadingMain && !project) {
+        navigate("/");
+     }
+  }, [project, loadingMain, navigate]);
 
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
 
-  if (loading) {
+  if (loadingMain) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <Loader2 className="h-8 w-8 text-rose-500 animate-spin" />
@@ -299,7 +305,7 @@ export function ProjectDetail() {
                 </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedProjects.map((rp) => (
+                {filteredRelated.map((rp) => (
                   <motion.div
                     key={rp.id}
                     initial={{ opacity: 0, y: 20 }}

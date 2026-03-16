@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Calendar, Clock, ArrowRight, Loader2, Search, Filter, Share2 } from "lucide-react";
 import { db } from "../firebase";
-import { collection, getDocs, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, query, orderBy, Timestamp, limit } from "firebase/firestore";
 import { ImageWithBlur } from "./ImageWithBlur";
 import { SEO } from "./SEO";
+import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
 
 interface Article {
   id: string;
@@ -19,76 +20,14 @@ interface Article {
 }
 
 export function Blog() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: articles = [], isLoading } = useFirestoreQuery<Article>(['blogPosts'], 'blogPosts', [orderBy('createdAt', 'desc'), limit(12)]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Wszystkie");
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const q = query(collection(db, "blogPosts"), orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        
-        if (querySnapshot.empty) {
-          setArticles([
-            {
-              id: "1",
-              title: "Dlaczego AI nie zastąpi UX Designera (jeszcze)",
-              excerpt: "Sztuczna inteligencja generuje makiety w sekundy, ale czy rozumie emocje użytkownika?",
-              content: `
-                <p>Wszyscy słyszeliśmy te prognozy: "AI zabierze nam pracę". Jako projektant z 10-letnim stażem mam inną perspektywę.</p>
-                <p>Sztuczna inteligencja to potężne narzędzie, które przyspiesza żmudne procesy, ale design to coś więcej niż piksele. To empatia, zrozumienie kontekstu biznesowego i rozwiązywanie problemów, których AI jeszcze nie potrafi zdefiniować.</p>
-                <h3>Empatia jako klucz</h3>
-                <p>AI potrafi wygenerować 100 wariantów przycisku, ale to projektant wie, dlaczego ten konkretny kolor wywoła u użytkownika poczucie bezpieczeństwa w aplikacji bankowej.</p>
-              `,
-              category: "AI & Design",
-              image: "https://picsum.photos/seed/ai-ux/800/600",
-              readTime: "5 min",
-              tags: ["AI", "UX", "Future"],
-              createdAt: Timestamp.now()
-            },
-            {
-              id: "2",
-              title: "5 błędów na Landing Page, które zabijają konwersję",
-              excerpt: "Twoja strona jest piękna, ale nie sprzedaje? Sprawdź te krytyczne błędy.",
-              content: `
-                <p>Piękny design to za mało. Landing page musi być maszyną do sprzedaży.</p>
-                <ol>
-                  <li>Brak jasnego Value Proposition</li>
-                  <li>Zbyt wiele rozpraszaczy</li>
-                  <li>Słabe Call to Action</li>
-                  <li>Brak dowodów społecznych</li>
-                  <li>Zbyt długie formularze</li>
-                </ol>
-                <p>Naprawienie tych błędów często skutkuje natychmiastowym wzrostem konwersji o kilkadziesiąt procent.</p>
-              `,
-              category: "Optymalizacja",
-              image: "https://picsum.photos/seed/conversion/800/600",
-              readTime: "7 min",
-              tags: ["Conversion", "Landing Page", "UX"],
-              createdAt: Timestamp.now()
-            }
-          ]);
-        } else {
-          const fetchedArticles = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          })) as Article[];
-          setArticles(fetchedArticles);
-        }
-      } catch (error) {
-        console.error("Error fetching blog posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
-  }, []);
-
-  const categories = ["Wszystkie", ...new Set(articles.map(a => a.category))];
+  // Fallback data for categories if articles are still loading or empty
+  const allCategories = ["Wszystkie", ...new Set(articles.map(a => a.category))];
+  const categories = allCategories.length > 1 ? allCategories : ["Wszystkie", "AI & Design", "Optymalizacja"]; // Example fallback categories
 
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -97,7 +36,7 @@ export function Blog() {
     return matchesSearch && matchesCategory;
   });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="py-16 bg-slate-50 dark:bg-slate-950 flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 text-rose-500 animate-spin" />

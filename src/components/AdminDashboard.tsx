@@ -10,6 +10,8 @@ import { fetchSearchConsoleData, SearchConsoleData } from "../services/googleSea
 import { useTheme } from "./ThemeProvider";
 import toast from "react-hot-toast";
 import { TripleDocGenerator } from "./TripleDocGenerator";
+import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ContactSubmission {
   id: string;
@@ -121,14 +123,16 @@ interface FirestoreErrorInfo {
 }
 
 export function AdminDashboard() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
-  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
-  const [signups, setSignups] = useState<LeadMagnetSignup[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [clientProjects, setClientProjects] = useState<ClientProject[]>([]);
+  const { data: submissions = [], isLoading: loadingSubmissions } = useFirestoreQuery<ContactSubmission>(['contactSubmissions'], 'contactSubmissions', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: signups = [] } = useFirestoreQuery<LeadMagnetSignup>(['leadMagnetSignups'], 'leadMagnetSignups', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: blogPosts = [] } = useFirestoreQuery<BlogPost>(['blogPosts'], 'blogPosts', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: portfolioItems = [] } = useFirestoreQuery<PortfolioItem>(['portfolioItems'], 'portfolioItems', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: testimonials = [] } = useFirestoreQuery<Testimonial>(['testimonials'], 'testimonials', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: clientProjects = [] } = useFirestoreQuery<ClientProject>(['client_projects'], 'client_projects', [orderBy('createdAt', 'desc'), limit(50)]);
   const [feedbackMessages, setFeedbackMessages] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<"dashboard" | "analytics" | "submissions" | "signups" | "blog" | "portfolio" | "testimonials" | "client_projects" | "messages" | "ai_strategy" | "seo_monitoring">("dashboard");
   const [seoData, setSeoData] = useState<SearchConsoleData | null>(null);
@@ -150,7 +154,7 @@ export function AdminDashboard() {
   const [selectedImagePrompt, setSelectedImagePrompt] = useState<{ id: string; prompt: string } | null>(null);
   const [analyticsSummary, setAnalyticsSummary] = useState<string | null>(null);
   const [isTranslating, setIsTranslating] = useState<string | null>(null);
-  const [notifications, setNotifications] = useState<ContactSubmission[]>([]);
+  const notifications = submissions.filter(s => s.status === 'new');
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedTripleDocProject, setSelectedTripleDocProject] = useState<ClientProject | null>(null);
   
@@ -160,7 +164,6 @@ export function AdminDashboard() {
   const [newActivityLog, setNewActivityLog] = useState({ title: '', description: '', isPrivate: false });
 
   const { theme, setTheme, isDark } = useTheme();
-  const navigate = useNavigate();
 
   // Form states for adding content
   const [newBlog, setNewBlog] = useState({ title: "", excerpt: "", content: "", category: "", image: "", imageAlt: "", readTime: "", tags: "" });
@@ -203,169 +206,22 @@ export function AdminDashboard() {
         return;
       }
 
-      unsubscribeData = await fetchData();
       setLoading(false);
     });
 
     return () => {
       unsubscribeAuth();
-      if (unsubscribeData) unsubscribeData();
     };
   }, [navigate]);
-
-  // Lazy fetch data depending on the activeTab
-  useEffect(() => {
-    if (activeTab === "seo_monitoring" && !seoData) {
-      const loadSeoData = async () => {
-        setLoadingSeo(true);
-        const data = await fetchSearchConsoleData();
-        setSeoData(data);
-        setLoadingSeo(false);
-      };
-      loadSeoData();
-    }
-    
-    // Lazy load the collections to prevent UI freeze on initial render
-    const loadTabData = async () => {
-       if (loadedTabs[activeTab]) return;
-
-       const markTabLoaded = () => setLoadedTabs(prev => ({ ...prev, [activeTab]: true }));
-
-       try {
-         switch (activeTab) {
-           case "submissions":
-           case "dashboard":
-             if (!loadedTabs.submissions) {
-                const subSnapshot = await getDocs(query(collection(db, "contactSubmissions"), orderBy("createdAt", "desc"), limit(50)));
-                setSubmissions(subSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContactSubmission[]);
-                setLoadedTabs(prev => ({ ...prev, submissions: true, dashboard: true }));
-             }
-             break;
-           case "signups":
-             const signupsSnapshot = await getDocs(query(collection(db, "leadMagnetSignups"), orderBy("createdAt", "desc"), limit(50)));
-             setSignups(signupsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as LeadMagnetSignup[]);
-             markTabLoaded();
-             break;
-           case "blog":
-             const blogSnapshot = await getDocs(query(collection(db, "blogPosts"), orderBy("createdAt", "desc"), limit(50)));
-             setBlogPosts(blogSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as BlogPost[]);
-             markTabLoaded();
-             break;
-           case "portfolio":
-             const portSnapshot = await getDocs(query(collection(db, "portfolioItems"), orderBy("createdAt", "desc"), limit(50)));
-             setPortfolioItems(portSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as PortfolioItem[]);
-             markTabLoaded();
-             break;
-           case "testimonials":
-             const testSnapshot = await getDocs(query(collection(db, "testimonials"), orderBy("createdAt", "desc"), limit(50)));
-             setTestimonials(testSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Testimonial[]);
-             markTabLoaded();
-             break;
-           case "client_projects":
-             const projSnapshot = await getDocs(query(collection(db, "client_projects"), orderBy("createdAt", "desc"), limit(50)));
-             setClientProjects(projSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ClientProject[]);
-             markTabLoaded();
-             break;
-         }
-       } catch (error) {
-         console.error(`Error loading data for tab ${activeTab}:`, error);
-       }
-    };
-    
-    loadTabData();
-  }, [activeTab, seoData, loadedTabs]);
-
-  const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
-    console.log("handleFirestoreError called", { error, operationType, path });
-    const errInfo: FirestoreErrorInfo = {
-      error: error instanceof Error ? error.message : String(error),
-      authInfo: {
-        userId: auth.currentUser?.uid,
-        email: auth.currentUser?.email,
-        emailVerified: auth.currentUser?.emailVerified,
-        isAnonymous: auth.currentUser?.isAnonymous,
-        tenantId: auth.currentUser?.tenantId,
-        providerInfo: auth.currentUser?.providerData.map(provider => ({
-          providerId: provider.providerId,
-          displayName: provider.displayName,
-          email: provider.email,
-          photoUrl: provider.photoURL
-        })) || []
-      },
-      operationType,
-      path
-    };
-    console.error('Firestore Error: ', JSON.stringify(errInfo));
-    toast.error(`Błąd uprawnień (${operationType} na ${path}). Sprawdź konsolę.`);
-    throw new Error(JSON.stringify(errInfo));
-  };
-
-  const fetchData = async () => {
-    try {
-      // Wykorzystanie Promise.allSettled do ucinania wąskiego gardła sekwencyjnego pobierania dla każdej kolekcji (zwiększy szybkość ladowania x6)
-      const fetchPromises = [
-        getDocs(query(collection(db, "contactSubmissions"), orderBy("createdAt", "desc"), limit(50))),
-        getDocs(query(collection(db, "client_projects"), orderBy("createdAt", "desc"), limit(50)))
-      ];
-
-      const results = await Promise.allSettled(fetchPromises);
-
-      if (results[0].status === 'fulfilled') {
-        const subData = results[0].value.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContactSubmission[];
-        setSubmissions(subData);
-        setNotifications(subData.filter(s => s.status === 'new'));
-      }
-      
-      if (results[1].status === 'fulfilled') {
-        setClientProjects(results[1].value.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ClientProject[]);
-      }
-      
-      setLoadedTabs(prev => ({ ...prev, dashboard: true, submissions: true, client_projects: true }));
-      
-      // Real-time Feedback Messages
-      const messagesQuery = query(collection(db, "client_feedback"), orderBy("createdAt", "asc"), limit(100));
-      const unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-        setFeedbackMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      }, (e) => handleFirestoreError(e, OperationType.LIST, "client_feedback"));
-
-
-      // Real-time listener for new leads
-      const submissionsRef = collection(db, "contactSubmissions");
-      const latestSubmissionsQuery = query(submissionsRef, orderBy("createdAt", "desc"), limit(50));
-      
-      const unsubscribeLeads = onSnapshot(latestSubmissionsQuery, (snapshot) => {
-        const newSubmissions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ContactSubmission[];
-        
-        // Update notifications (unread leads)
-        const unread = newSubmissions.filter(s => s.status === 'new');
-        setNotifications(unread);
-
-        // Only show toast if it's a real new lead (not initial load)
-        if (submissions.length > 0 && newSubmissions.length > submissions.length) {
-          const newest = newSubmissions[0];
-          if (newest.status === 'new') {
-            setNewLeadToast({ name: newest.name, email: newest.email });
-            // Auto-hide after 5 seconds
-            setTimeout(() => setNewLeadToast(null), 5000);
-          }
-        }
-        
-        setSubmissions(newSubmissions);
-      }, (e) => handleFirestoreError(e, OperationType.LIST, "contactSubmissions"));
-
-      return () => {
-        unsubscribeMessages();
-        unsubscribeLeads();
-      };
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const handleFirestoreError = (error: unknown, operationType: string, path: string | null) => {
+    console.error(`Firestore Error: ${operationType} on ${path}`, error);
+    toast.error(`Błąd Firestore (${operationType}). Sprawdź konsolę.`);
   };
 
   const handleUpdateSubmission = async (id: string, data: Partial<ContactSubmission>) => {
     try {
       await updateDoc(doc(db, "contactSubmissions", id), data);
-      setSubmissions(prev => prev.map(sub => sub.id === id ? { ...sub, ...data } : sub));
+      // React Query will pick up changes on next refetch or we can invalidate
     } catch (error) {
       console.error("Error updating submission:", error);
     }
@@ -491,7 +347,7 @@ export function AdminDashboard() {
       } else {
         toast.success("Dane zostały dodane pomyślnie!");
       }
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       toast.error("Błąd podczas dodawania danych: " + (error instanceof Error ? error.message : String(error)));
     } finally {
@@ -539,7 +395,8 @@ export function AdminDashboard() {
       
       console.log("Dane zostały usunięte!");
       toast.success("Wszystkie dane zostały usunięte.");
-      fetchData();
+      // Invalidate all relevant queries
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error clearing data:", error);
       // handleFirestoreError already sets statusMessage and throws
@@ -578,7 +435,7 @@ export function AdminDashboard() {
       setNewBlog({ title: "", excerpt: "", content: "", category: "", image: "", imageAlt: "", readTime: "", tags: "" });
       setShowAddModal(false);
       setEditingId(null);
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error adding/updating blog post:", error);
     }
@@ -607,7 +464,7 @@ export function AdminDashboard() {
       setNewPortfolio({ title: "", category: "", description: "", image: "", imageAlt: "", gallery: "", link: "", caseStudyLink: "", tags: "", beforeImage: "", afterImage: "" });
       setShowAddModal(false);
       setEditingId(null);
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error adding/updating portfolio item:", error);
     }
@@ -624,7 +481,7 @@ export function AdminDashboard() {
       setNewTestimonial({ name: "", role: "", content: "", avatar: "", rating: 5, projectImage: "", projectLink: "", linkedInUrl: "" });
       setShowAddModal(false);
       setEditingId(null);
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error adding/updating testimonial:", error);
     }
@@ -665,7 +522,7 @@ export function AdminDashboard() {
       });
       setShowAddModal(false);
       setEditingId(null);
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error adding/updating client project:", error);
     }
@@ -847,7 +704,7 @@ export function AdminDashboard() {
           translatedAt: serverTimestamp() 
         });
         toast.success("Treść została przetłumaczona i zapisana!");
-        fetchData();
+        queryClient.invalidateQueries();
       }
     } catch (error) {
       console.error("Error translating:", error);
@@ -867,7 +724,7 @@ export function AdminDashboard() {
           seoUpdatedAt: serverTimestamp() 
         });
         toast.success("Meta-tagi SEO zostały wygenerowane i zapisane!");
-        fetchData();
+        queryClient.invalidateQueries();
       }
     } catch (error) {
       console.error("Error generating SEO:", error);
@@ -943,7 +800,7 @@ export function AdminDashboard() {
     if (!window.confirm("Czy na pewno chcesz usunąć ten element?")) return;
     try {
       await deleteDoc(doc(db, collectionName, id));
-      fetchData();
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error("Error deleting document:", error);
     }

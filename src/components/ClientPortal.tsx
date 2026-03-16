@@ -13,6 +13,7 @@ import { AiAssistant } from "./portal/AiAssistant";
 import toast from "react-hot-toast";
 import { generateChatbotResponse } from "../services/aiLeadService";
 import { useTheme } from "./ThemeProvider";
+import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
 
 interface FeedbackMessage {
   id: string;
@@ -22,9 +23,16 @@ interface FeedbackMessage {
 }
 
 export function ClientPortal() {
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [project, setProject] = useState<any>(null);
+  const userEmail = user?.email?.toLowerCase() || "";
+  
+  const { data: projectDataArray = [], isLoading: loadingProject } = useFirestoreQuery<any>(
+    ['clientProject', userEmail], 
+    'client_projects', 
+    userEmail ? [where("clientEmail", "==", userEmail), limit(1)] : []
+  );
+
+  const project = projectDataArray.length > 0 ? projectDataArray[0] : null;
   const [messages, setMessages] = useState<FeedbackMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -38,72 +46,35 @@ export function ClientPortal() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         navigate("/client/login");
         return;
       }
       setUser(currentUser);
-      
-      try {
-        const userEmail = currentUser.email?.toLowerCase();
-        const q = query(collection(db, "client_projects"), where("clientEmail", "==", userEmail));
-        const querySnapshot = await getDocs(q);
-        
-        let currentProjectId = "";
-        if (!querySnapshot.empty) {
-          const projectData = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-          setProject(projectData);
-          currentProjectId = projectData.id;
-        } else {
-          const demoProject = {
-            id: "demo-123",
-            name: "Nowa Strona Internetowa",
-            status: "in-progress",
-            progress: 60,
-            startDate: "2026-03-01",
-            estimatedCompletion: "2026-03-20",
-            currentPhase: "Projektowanie UI",
-            phases: [
-              { name: "Strategia i UX", completed: true },
-              { name: "Projektowanie UI", completed: false },
-              { name: "Wdrożenie (Development)", completed: false },
-              { name: "Testy i Optymalizacja", completed: false },
-              { name: "Uruchomienie", completed: false }
-            ],
-            links: [
-              { name: "Makiety Figma", url: "#", icon: "figma" },
-              { name: "Dokumentacja", url: "#", icon: "doc" }
-            ]
-          };
-          setProject(demoProject);
-          currentProjectId = demoProject.id;
-        }
-
-        // Real-time messages
-        const msgQuery = query(
-          collection(db, "client_feedback"), 
-          where("projectId", "==", currentProjectId),
-          orderBy("createdAt", "asc"),
-          limit(100)
-        );
-        
-        const unsubscribeMsgs = onSnapshot(msgQuery, (snapshot) => {
-          const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as FeedbackMessage[];
-          setMessages(msgs);
-        });
-
-        return () => unsubscribeMsgs();
-
-      } catch (error) {
-        console.error("Error fetching project:", error);
-      } finally {
-        setLoading(false);
-      }
     });
 
     return () => unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    if (!project?.id) return;
+    
+    // Real-time messages remains onSnapshot as it's efficient for chat
+    const msgQuery = query(
+      collection(db, "client_feedback"), 
+      where("projectId", "==", project.id),
+      orderBy("createdAt", "asc"),
+      limit(100)
+    );
+    
+    const unsubscribeMsgs = onSnapshot(msgQuery, (snapshot) => {
+      const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as FeedbackMessage[];
+      setMessages(msgs);
+    });
+
+    return () => unsubscribeMsgs();
+  }, [project?.id]);
 
   const handleSendMessage = async (e: React.FormEvent, phaseName?: string, directMessage?: string) => {
     if (e) e.preventDefault();
@@ -158,7 +129,7 @@ export function ClientPortal() {
     }
   };
 
-  if (loading) {
+  if (loadingProject) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
         <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
