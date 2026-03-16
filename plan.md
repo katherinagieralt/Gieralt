@@ -538,10 +538,10 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Połączenie nowych modułów w solidną całość oraz QA
 
 ### Zadania:
-- [ ] Autoryzacja i zabezpieczenia Firebase dla wszystkich nowych komponentów Client-OS
-- [ ] Wdrożenie widgetu `ProjectHealthScore.tsx` na dashboardzie administratora (analiza opóźnień, sentiment score)
-- [ ] Weryfikacja RWD (Mobile-first, testy dla 375px)
-- [ ] Testy całego flow działania Client-OS zapisanego w Firebase
+- [x] Autoryzacja i zabezpieczenia Firebase dla wszystkich nowych komponentów Client-OS
+- [x] Wdrożenie widgetu `ProjectHealthScore.tsx` na dashboardzie administratora (analiza opóźnień, sentiment score)
+- [x] Weryfikacja RWD (Mobile-first, testy dla 375px)
+- [x] Testy całego flow działania Client-OS zapisanego w Firebase
 
 # EPIC: Code Quality & Architecture Refactoring
 
@@ -550,10 +550,10 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Rozwiązanie długu technologicznego, redukcja rozmiaru kluczowych widoków i standaryzacja stanu.
 
 ### Zadania:
-- [ ] Refaktoryzacja `AdminDashboard.tsx` - podział na mniejsze, reużywalne podkomponenty
-- [ ] Wprowadzenie i konfiguracja `Zustand` do zarządzania stanem układu oraz filtrowania globalnego
-- [ ] Migracja pobierania danych do `React Query` celem cachowania zapytań z Firebase i eliminacji redundantnych requestów
-- [ ] Wdrożenie pełnego `strict mode` dla TypeScripta we flagowych plikach (`no implicit any`)
+- [x] Refaktoryzacja `AdminDashboard.tsx` - podział na mniejsze, reużywalne podkomponenty
+- [x] Wprowadzenie i konfiguracja `Zustand` do zarządzania stanem układu oraz filtrowania globalnego
+- [x] Migracja pobierania danych do `React Query` celem cachowania zapytań z Firebase i eliminacji redundantnych requestów
+- [x] Wdrożenie pełnego `strict mode` dla TypeScripta we flagowych plikach (`no implicit any`)
 
 # EPIC: Quality Assurance & Testing Platform
 
@@ -562,10 +562,10 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Zabezpieczenie obecnych i przyszłych funkcjonalności przed regresją
 
 ### Zadania:
-- [ ] Instalacja i konfiguracja środowiska `Vitest` we współpracy z Vite
-- [ ] Konfiguracja `React Testing Library` (RTL) pod weryfikację zachowań użytkownika
-- [ ] Napisanie testów jednostkowych i integracyjnych dla krytycznych haków i głównych komponentów autoryzacyjnych
-- [ ] Wdrożenie Error Boundaries per router route dla bezbłędnej obsługi awarii
+- [x] Instalacja i konfiguracja środowiska `Vitest` we współpracy z Vite
+- [x] Konfiguracja `React Testing Library` (RTL) pod weryfikację zachowań użytkownika
+- [x] Napisanie testów jednostkowych i integracyjnych dla krytycznych haków i głównych komponentów autoryzacyjnych
+- [x] Wdrożenie Error Boundaries per router route dla bezbłędnej obsługi awarii
 
 # EPIC: CI/CD & DevOps Automation
 
@@ -574,9 +574,9 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Przyspieszenie pracy poprzez powtarzalne i zautomatyzowane procesy wydawnicze
 
 ### Zadania:
-- [ ] Skonfigurowanie `GitHub Actions` dla Continuous Integration (uruchamianie linterów i testów Vitest na każdym PR)
-- [ ] Instalacja i konfiguracja `Husky` oraz `lint-staged` blokujących niepoprawne commity
-- [ ] Skonfigurowanie środowiska Staging w Firebase Hosting
+- [x] Skonfigurowanie `GitHub Actions` dla Continuous Integration (uruchamianie linterów i testów Vitest na każdym PR)
+- [x] Instalacja i konfiguracja `Husky` oraz `lint-staged` blokujących niepoprawne commity
+- [x] Skonfigurowanie środowiska Staging w Firebase Hosting
 
 # EPIC: Advanced UX & Progressive Web App
 
@@ -585,6 +585,6 @@ Wszystkie kluczowe funkcjonalności zostały zaimplementowane i przetestowane. S
 ## Cel: Doświadczenie aplikacji natywnej na urządzeniach mobilnych z szybkim ładowaniem
 
 ### Zadania:
-- [ ] Konfiguracja `vite-plugin-pwa` i dodanie `manifest.json` (logo, kolory motywu)
-- [ ] Zintegrowanie Service Workers dla trybu offline / buforowania statycznych assetów
-- [ ] Obsługa monitów o wyłączeniu połączenia bez wyrzucenia błędów Firebase
+- [x] Konfiguracja `vite-plugin-pwa` i dodanie `manifest.json` (logo, kolory motywu)
+- [x] Zintegrowanie Service Workers dla trybu offline / buforowania statycznych assetów
+- [x] Obsługa monitów o wyłączeniu połączenia bez wyrzucenia błędów Firebase

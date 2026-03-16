@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy, ReactNode } from "react";
+import { useState, Suspense, lazy, ReactNode, useEffect } from "react";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
 import { ImpactSection } from "./ImpactSection";
@@ -8,8 +8,6 @@ import { SEO } from "./SEO";
 import { ScrollProgress } from "./ScrollProgress";
 import { FloatingCTA } from "./FloatingCTA";
 import { About } from "./About";
-
-import { useEffect } from "react";
 
 // Lazy load heavy components
 const Process = lazy(() => import("./Process").then(module => ({ default: module.Process })));

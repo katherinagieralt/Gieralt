@@ -12,6 +12,10 @@ import toast from "react-hot-toast";
 import { TripleDocGenerator } from "./TripleDocGenerator";
 import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
 import { useQueryClient } from "@tanstack/react-query";
+import { ProjectHealthScore } from "./ProjectHealthScore";
+import { AdminStats } from "./admin/AdminStats";
+import { AdminNav } from "./admin/AdminNav";
+import { useAdminStore } from "../stores/useAdminStore";
 
 interface ContactSubmission {
   id: string;
@@ -133,19 +137,27 @@ export function AdminDashboard() {
   const { data: portfolioItems = [] } = useFirestoreQuery<PortfolioItem>(['portfolioItems'], 'portfolioItems', [orderBy('createdAt', 'desc'), limit(50)]);
   const { data: testimonials = [] } = useFirestoreQuery<Testimonial>(['testimonials'], 'testimonials', [orderBy('createdAt', 'desc'), limit(50)]);
   const { data: clientProjects = [] } = useFirestoreQuery<ClientProject>(['client_projects'], 'client_projects', [orderBy('createdAt', 'desc'), limit(50)]);
+  const { data: scopeProposals = [] } = useFirestoreQuery<any>(['scopeProposals'], 'scopeProposals', [orderBy('createdAt', 'desc'), limit(50)]);
   const [feedbackMessages, setFeedbackMessages] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "analytics" | "submissions" | "signups" | "blog" | "portfolio" | "testimonials" | "client_projects" | "messages" | "ai_strategy" | "seo_monitoring">("dashboard");
+  // Global admin UI state via Zustand
+  const { 
+    activeTab, setActiveTab,
+    clientSubTab, setClientSubTab,
+    showNotifications, setShowNotifications,
+    selectedProjectId, setSelectedProjectId
+  } = useAdminStore();
   const [seoData, setSeoData] = useState<SearchConsoleData | null>(null);
   const [loadingSeo, setLoadingSeo] = useState(false);
   const [loadedTabs, setLoadedTabs] = useState<Record<string, boolean>>({});
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [adminReply, setAdminReply] = useState("");
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [selectedSubmission, setSelectedSubmission] = useState<ContactSubmission | null>(null);
   const [newLeadToast, setNewLeadToast] = useState<{ name: string; email: string } | null>(null);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [weeklyReport, setWeeklyReport] = useState<string | null>(null);
+  const [selectedTripleDocProject, setSelectedTripleDocProject] = useState<ClientProject | null>(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [followUpDraft, setFollowUpDraft] = useState<{ subject: string; body: string } | null>(null);
   const [topicIdeas, setTopicIdeas] = useState<TopicIdea[]>([]);
@@ -154,10 +166,10 @@ export function AdminDashboard() {
   const [selectedImagePrompt, setSelectedImagePrompt] = useState<{ id: string; prompt: string } | null>(null);
   const [analyticsSummary, setAnalyticsSummary] = useState<string | null>(null);
   const [isTranslating, setIsTranslating] = useState<string | null>(null);
+
+  // Computed
   const notifications = submissions.filter(s => s.status === 'new');
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [selectedTripleDocProject, setSelectedTripleDocProject] = useState<ClientProject | null>(null);
-  
+
   // Activity Log State
   const [showActivityLogModal, setShowActivityLogModal] = useState(false);
   const [selectedActivityProject, setSelectedActivityProject] = useState<ClientProject | null>(null);
@@ -347,7 +359,14 @@ export function AdminDashboard() {
       } else {
         toast.success("Dane zostały dodane pomyślnie!");
       }
-      queryClient.invalidateQueries();
+      // Seed invalidates all collections
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['portfolioItems'] });
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+      queryClient.invalidateQueries({ queryKey: ['contactSubmissions'] });
+      queryClient.invalidateQueries({ queryKey: ['leadMagnetSignups'] });
+      queryClient.invalidateQueries({ queryKey: ['client_projects'] });
+      queryClient.invalidateQueries({ queryKey: ['client_feedback'] });
     } catch (error) {
       toast.error("Błąd podczas dodawania danych: " + (error instanceof Error ? error.message : String(error)));
     } finally {
@@ -396,10 +415,15 @@ export function AdminDashboard() {
       console.log("Dane zostały usunięte!");
       toast.success("Wszystkie dane zostały usunięte.");
       // Invalidate all relevant queries
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['portfolioItems'] });
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+      queryClient.invalidateQueries({ queryKey: ['contactSubmissions'] });
+      queryClient.invalidateQueries({ queryKey: ['leadMagnetSignups'] });
+      queryClient.invalidateQueries({ queryKey: ['client_projects'] });
+      queryClient.invalidateQueries({ queryKey: ['client_feedback'] });
     } catch (error) {
       console.error("Error clearing data:", error);
-      // handleFirestoreError already sets statusMessage and throws
     } finally {
       setSeeding(false);
     }
@@ -435,7 +459,7 @@ export function AdminDashboard() {
       setNewBlog({ title: "", excerpt: "", content: "", category: "", image: "", imageAlt: "", readTime: "", tags: "" });
       setShowAddModal(false);
       setEditingId(null);
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
     } catch (error) {
       console.error("Error adding/updating blog post:", error);
     }
@@ -464,7 +488,7 @@ export function AdminDashboard() {
       setNewPortfolio({ title: "", category: "", description: "", image: "", imageAlt: "", gallery: "", link: "", caseStudyLink: "", tags: "", beforeImage: "", afterImage: "" });
       setShowAddModal(false);
       setEditingId(null);
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ['portfolioItems'] });
     } catch (error) {
       console.error("Error adding/updating portfolio item:", error);
     }
@@ -481,7 +505,7 @@ export function AdminDashboard() {
       setNewTestimonial({ name: "", role: "", content: "", avatar: "", rating: 5, projectImage: "", projectLink: "", linkedInUrl: "" });
       setShowAddModal(false);
       setEditingId(null);
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
     } catch (error) {
       console.error("Error adding/updating testimonial:", error);
     }
@@ -522,7 +546,7 @@ export function AdminDashboard() {
       });
       setShowAddModal(false);
       setEditingId(null);
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ['client_projects'] });
     } catch (error) {
       console.error("Error adding/updating client project:", error);
     }
@@ -704,7 +728,8 @@ export function AdminDashboard() {
           translatedAt: serverTimestamp() 
         });
         toast.success("Treść została przetłumaczona i zapisana!");
-        queryClient.invalidateQueries();
+        const queryKey = type === 'blog' ? ['blogPosts'] : ['portfolioItems'];
+        queryClient.invalidateQueries({ queryKey });
       }
     } catch (error) {
       console.error("Error translating:", error);
@@ -724,7 +749,8 @@ export function AdminDashboard() {
           seoUpdatedAt: serverTimestamp() 
         });
         toast.success("Meta-tagi SEO zostały wygenerowane i zapisane!");
-        queryClient.invalidateQueries();
+        const seoQueryKey = type === 'blog' ? ['blogPosts'] : ['portfolioItems'];
+        queryClient.invalidateQueries({ queryKey: seoQueryKey });
       }
     } catch (error) {
       console.error("Error generating SEO:", error);
@@ -800,7 +826,7 @@ export function AdminDashboard() {
     if (!window.confirm("Czy na pewno chcesz usunąć ten element?")) return;
     try {
       await deleteDoc(doc(db, collectionName, id));
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: [collectionName] });
     } catch (error) {
       console.error("Error deleting document:", error);
     }
@@ -985,45 +1011,18 @@ export function AdminDashboard() {
           </div>
         </header>
 
-        <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-slate-800 pb-4 overflow-x-auto scrollbar-hide">
-          {[
-            { id: "dashboard", icon: Database, label: "Przegląd" },
-            { id: "analytics", icon: Database, label: "Analityka" },
-            { id: "client_projects", icon: Briefcase, label: `Klienci (${clientProjects.length})` },
-            { 
-              id: "messages", 
-              icon: MessageSquare, 
-              label: (
-                <div className="flex items-center gap-2">
-                  Wiadomości
-                  {feedbackMessages.some(m => m.sender === 'client') && (
-                    <span className="w-2 h-2 bg-rose-500 rounded-full" />
-                  )}
-                </div>
-              ) as any
-            },
-            { id: "submissions", icon: Mail, label: `Zgłoszenia (${submissions.length})` },
-            { id: "signups", icon: Users, label: `Newsletter (${signups.length})` },
-            { id: "blog", icon: BookOpen, label: `Blog (${blogPosts.length})` },
-            { id: "portfolio", icon: Briefcase, label: `Portfolio (${portfolioItems.length})` },
-            { id: "testimonials", icon: Star, label: `Opinie (${testimonials.length})` },
-            { id: "ai_strategy", icon: Sparkles, label: "AI Strategy" },
-            { id: "seo_monitoring", icon: Database, label: "SEO Monitoring" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all whitespace-nowrap text-sm font-medium ${
-                activeTab === tab.id 
-                  ? "bg-rose-50 dark:bg-rose-500/10 text-rose-500 shadow-sm border border-rose-100 dark:border-rose-500/20" 
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-transparent"
-              }`}
-            >
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <AdminNav
+          counts={{
+            submissions: submissions.length,
+            signups: signups.length,
+            blogPosts: blogPosts.length,
+            portfolioItems: portfolioItems.length,
+            testimonials: testimonials.length,
+            clientProjects: clientProjects.length,
+            unreadMessages: feedbackMessages.some(m => m.sender === 'client'),
+          }}
+          newLeadCount={notifications.length}
+        />
 
         {/* Content Tabs */}
         {activeTab === "messages" && (
@@ -1684,6 +1683,147 @@ export function AdminDashboard() {
               </div>
             ))}
             {testimonials.length === 0 && <div className="col-span-full text-center py-20 text-slate-500 font-light bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">Brak opinii.</div>}
+          </div>
+        )}
+
+        {activeTab === "client_projects" && (
+          <div className="space-y-8">
+            {/* Sub-tab toggle */}
+            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800/50 p-1 rounded-2xl self-start w-fit">
+              <button
+                onClick={() => setClientSubTab('projects')}
+                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${clientSubTab === 'projects' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+              >
+                Projekty
+              </button>
+              <button
+                onClick={() => setClientSubTab('proposals')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${clientSubTab === 'proposals' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+              >
+                Propozycje Zakresu
+                {scopeProposals.filter((p: any) => p.status === 'pending').length > 0 && (
+                  <span className="w-5 h-5 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {scopeProposals.filter((p: any) => p.status === 'pending').length}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {clientSubTab === 'projects' && (
+              <>
+                {/* Health Score Overview */}
+                <ProjectHealthScore />
+
+                {/* Project Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {clientProjects.map((project) => (
+                    <div key={project.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col gap-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-display font-semibold text-lg text-slate-900 dark:text-white mb-1">{project.name}</h3>
+                          <p className="text-xs text-slate-500">{project.clientEmail}</p>
+                        </div>
+                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                          project.status === 'completed' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' :
+                          project.status === 'in-progress' ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' :
+                          'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                        }`}>{project.status}</span>
+                      </div>
+                      {/* Progress bar */}
+                      <div>
+                        <div className="flex justify-between text-xs text-slate-500 mb-1">
+                          <span>Postęp</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{project.progress}%</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div
+                            className="h-full bg-rose-500 rounded-full transition-all"
+                            style={{ width: `${project.progress}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        <span className="font-medium text-slate-700 dark:text-slate-300">Faza: </span>{project.currentPhase}
+                      </div>
+                      <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <button
+                          onClick={() => { setSelectedTripleDocProject(project); }}
+                          className="flex-1 py-2 text-[10px] font-bold uppercase tracking-wider bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-500 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <Sparkles className="h-3 w-3" />
+                          Triple Doc
+                        </button>
+                        <button
+                          onClick={() => handleDelete("client_projects", project.id)}
+                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {clientProjects.length === 0 && (
+                    <div className="col-span-full text-center py-20 text-slate-500 font-light bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
+                      Brak projektów klientów.
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {clientSubTab === 'proposals' && (
+              <div className="space-y-4">
+                {scopeProposals.length === 0 && (
+                  <div className="text-center py-20 text-slate-500 font-light bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
+                    Brak propozycji zakresu od klientów.
+                  </div>
+                )}
+                {scopeProposals.map((proposal: any) => (
+                  <div key={proposal.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                          proposal.status === 'pending' ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' :
+                          proposal.status === 'accepted' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' :
+                          'bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400'
+                        }`}>{proposal.status}</span>
+                        <span className="text-xs text-slate-400">{proposal.createdAt?.toDate().toLocaleDateString()}</span>
+                      </div>
+                      <p className="font-semibold text-sm text-slate-900 dark:text-white mb-1">Projekt: {proposal.projectId}</p>
+                      <p className="text-xs text-slate-500"><span className="font-medium">Moduły:</span> {(proposal.modifications || []).join(', ')}</p>
+                      <div className="flex gap-4 text-xs text-slate-500 mt-2">
+                        <span><span className="font-bold text-slate-900 dark:text-white">{proposal.estimatedNewPrice} PLN</span> łącznie</span>
+                        <span><span className="font-bold text-slate-900 dark:text-white">{proposal.estimatedNewDays} dni</span> realizacji</span>
+                      </div>
+                    </div>
+                    {proposal.status === 'pending' && (
+                      <div className="flex gap-2 shrink-0">
+                        <button
+                          onClick={async () => {
+                            await updateDoc(doc(db, 'scopeProposals', proposal.id), { status: 'accepted' });
+                            queryClient.invalidateQueries({ queryKey: ['scopeProposals'] });
+                            toast.success('Propozycja zaakceptowana!');
+                          }}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-bold transition-all"
+                        >
+                          Akceptuj
+                        </button>
+                        <button
+                          onClick={async () => {
+                            await updateDoc(doc(db, 'scopeProposals', proposal.id), { status: 'rejected' });
+                            queryClient.invalidateQueries({ queryKey: ['scopeProposals'] });
+                            toast.success('Propozycja odrzucona.');
+                          }}
+                          className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-slate-700 dark:text-slate-300 hover:text-rose-600 rounded-xl text-sm font-bold transition-all"
+                        >
+                          Odrzuć
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

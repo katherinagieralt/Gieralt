@@ -11,6 +11,8 @@ import { PearlBackground } from "./components/PearlBackground";
 import { AccessibilityProvider } from "./context/AccessibilityContext";
 import { AccessibilityPanel } from "./components/AccessibilityPanel";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { OfflineBanner } from "./components/OfflineBanner";
+import { PWAUpdatePrompt } from "./components/PWAUpdatePrompt";
 import { Loader2 } from "lucide-react";
 
 // Lazy-loaded components (splits the bundle and improves load time drastically)
@@ -37,6 +39,8 @@ export default function App() {
       <AccessibilityProvider>
         <MotionConfig reducedMotion="user">
           <BrowserRouter>
+            <OfflineBanner />
+            <PWAUpdatePrompt />
             <Toaster position="top-right" />
             <PearlBackground />
             <AccessibilityPanel />

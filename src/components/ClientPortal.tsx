@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { generateChatbotResponse } from "../services/aiLeadService";
 import { useTheme } from "./ThemeProvider";
 import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
+import { ClientDashboard } from "../features/client-os/components/ClientDashboard";
 
 interface FeedbackMessage {
   id: string;
@@ -194,6 +195,14 @@ export function ClientPortal() {
                   setNewMessage={setNewMessage} 
                   onSendMessage={handleSendMessage} 
                 />
+                {/* Client-OS: AI Narrator + Scope Configurator */}
+                {user && (
+                  <ClientDashboard 
+                    projectId={project.id} 
+                    userId={user.uid}
+                    defaultMode="focus"
+                  />
+                )}
               </div>
 
               {/* Right Column - Resources & Contact */}
