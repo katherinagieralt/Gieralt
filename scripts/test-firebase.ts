@@ -1,13 +1,16 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const firebaseConfig = {
-  projectId: "gen-lang-client-0928557519",
-  appId: "1:677025367520:web:8797bbd22042da9258d785",
-  apiKey: "AIzaSyDjYi67ZxwKCYwGiFwRUoApEWztOEYA8bs",
-  authDomain: "gen-lang-client-0928557519.firebaseapp.com",
-  storageBucket: "gen-lang-client-0928557519.firebasestorage.app",
-  messagingSenderId: "677025367520",
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
 };
 
 const app = initializeApp(firebaseConfig);

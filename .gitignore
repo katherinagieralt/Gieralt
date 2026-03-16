@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Security: Ignore scripts and local config files that might contain keys
+scripts/
+firebase-applet-config.json
