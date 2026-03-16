@@ -64,9 +64,9 @@ describe('AdminNav', () => {
     expect(screen.queryByText('0')).not.toBeInTheDocument();
   });
 
-  it('renders all 11 navigation tabs', () => {
+  it('renders all 12 navigation tabs', () => {
     render(<AdminNav counts={defaultCounts} newLeadCount={0} />);
     const buttons = screen.getAllByRole('button');
-    expect(buttons.length).toBe(11);
+    expect(buttons.length).toBe(12);
   });
 });
