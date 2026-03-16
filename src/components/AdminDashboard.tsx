@@ -267,7 +267,7 @@ export function AdminDashboard() {
           excerpt: "Sztuczna inteligencja generuje makiety w sekundy, ale czy rozumie emocje użytkownika?",
           content: "<p>Wszyscy słyszeliśmy te prognozy: 'AI zabierze nam pracę'. Jako projektant z 10-letnim stażem mam inną perspektywę...</p>",
           category: "AI & Design",
-          image: "https://picsum.photos/seed/ai-ux/800/600",
+          image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
           readTime: "5 min",
           tags: ["AI", "UX", "Future"],
           createdAt: serverTimestamp()
@@ -277,7 +277,7 @@ export function AdminDashboard() {
           excerpt: "Twoja strona jest piękna, ale nie sprzedaje? Sprawdź te krytyczne błędy.",
           content: "<p>Piękny design to za mało. Landing page musi być maszyną do sprzedaży...</p>",
           category: "Optymalizacja",
-          image: "https://picsum.photos/seed/conversion/800/600",
+          image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
           readTime: "7 min",
           tags: ["Conversion", "Landing Page", "UX"],
           createdAt: serverTimestamp()
@@ -289,10 +289,19 @@ export function AdminDashboard() {
         {
           title: "Aplikacja FinTech",
           category: "Mobile App",
-          description: "Projektowanie intuicyjnego interfejsu dla aplikacji bankowej.",
-          image: "https://picsum.photos/seed/fintech/800/600",
+          description: "Projektowanie intuicyjnego interfejsu dla aplikacji bankowej nowej generacji.",
+          image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1470&auto=format&fit=crop",
           link: "https://example.com",
           tags: ["UX", "UI", "FinTech"],
+          createdAt: serverTimestamp()
+        },
+        {
+          title: "Platforma eCommerce",
+          category: "Web Design",
+          description: "Strona dla butiku modowego z naciskiem na storytelling i UX.",
+          image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1470&auto=format&fit=crop",
+          link: "https://example.com",
+          tags: ["eCommerce", "Responsive", "Brand"],
           createdAt: serverTimestamp()
         }
       ];
@@ -302,74 +311,150 @@ export function AdminDashboard() {
         {
           name: "Jan Kowalski",
           role: "CEO, TechCorp",
-          content: "Świetna współpraca, profesjonalne podejście.",
+          content: "Współpraca z Gieralt Studio to zupełnie inny poziom. AI Insights pomogły nam zrozumieć naszych klientów jak nigdy dotąd.",
+          rating: 5,
+          createdAt: serverTimestamp()
+        },
+        {
+          name: "Marta Wiśniewska",
+          role: "Marketing Manager, FashionHub",
+          content: "Dbałość o detale i szybkość wdrożenia przerosły nasze oczekiwania. Polecam każdemu, kto szuka jakości!",
           rating: 5,
           createdAt: serverTimestamp()
         }
       ];
 
-      // Seed Client Projects
-      const clientProjectData = [
+      // Seed Contact Submissions
+      const submissionData = [
         {
-          clientEmail: "client@example.com",
-          name: "Projekt X",
-          status: "in-progress",
-          progress: 50,
-          startDate: "2026-01-01",
-          estimatedCompletion: "2026-06-01",
-          currentPhase: "Projektowanie UI",
-          phases: [
-            { name: "Strategia i UX", completed: true },
-            { name: "Projektowanie UI", completed: false },
-            { name: "Wdrożenie (Development)", completed: false },
-            { name: "Testy i Optymalizacja", completed: false },
-            { name: "Uruchomienie", completed: false }
-          ],
-          links: [
-            { name: "Makiety Figma", url: "https://figma.com", icon: "figma" }
-          ],
+          name: "Anna Nowak",
+          email: "anna@firma.pl",
+          budget: "10 000 - 20 000 PLN",
+          timeline: "3 miesiące",
+          message: "Szukamy partnera do stworzenia aplikacji SaaS dla branży medycznej.",
+          status: "new",
+          aiInsights: {
+            score: 85,
+            intent: "Wysoka - Projekt SaaS",
+            sentiment: "Pozytywny",
+            tags: ["SaaS", "Wysoki priorytet", "Medycyna"]
+          },
+          createdAt: serverTimestamp()
+        },
+        {
+          name: "Piotr Wiśniewski",
+          email: "piotr@startup.com",
+          budget: "5 000 - 10 000 PLN",
+          timeline: "Szybki start (1 miesiąc)",
+          message: "Potrzebuję profesjonalnego Landing Page dla mojego nowego produktu AI.",
+          status: "contacted",
+          aiInsights: {
+            score: 65,
+            intent: "Średnia - Landing Page",
+            sentiment: "Neutralny",
+            tags: ["Startup", "Vite", "AI"]
+          },
+          createdAt: serverTimestamp()
+        },
+        {
+          name: "Katarzyna Mazur",
+          email: "k.mazur@design.pl",
+          budget: "20 000 PLN+",
+          timeline: "Indywidualny",
+          message: "Chcemy odświeżyć wizerunek marki i przebudować nasz sklep internetowy.",
+          status: "new",
+          aiInsights: {
+            score: 92,
+            intent: "Bardzo Wysoka - Rebranding",
+            sentiment: "Bardzo Pozytywny",
+            tags: ["eCommerce", "Premium", "Lead"]
+          },
           createdAt: serverTimestamp()
         }
       ];
 
-      const seedPromises = [
-        ...blogData.map(post => addDoc(collection(db, "blogPosts"), post).catch(e => {
-          console.error("Error adding blog post:", e);
-          errors.push("Blog Posts");
-        })),
-        ...portfolioData.map(item => addDoc(collection(db, "portfolioItems"), item).catch(e => {
-          console.error("Error adding portfolio item:", e);
-          errors.push("Portfolio Items");
-        })),
-        ...testimonialData.map(testimonial => addDoc(collection(db, "testimonials"), testimonial).catch(e => {
-          console.error("Error adding testimonial:", e);
-          errors.push("Testimonials");
-        })),
-        ...clientProjectData.map(project => addDoc(collection(db, "client_projects"), project).catch(e => {
-          console.error("Error adding client project:", e);
-          errors.push("Client Projects");
-        }))
+      // Seed Newsletter Signups
+      const signupData = [
+        { email: "marta.test@gmail.com", createdAt: serverTimestamp() },
+        { email: "tomasz.dev@wp.pl", createdAt: serverTimestamp() },
+        { email: "info@marketing-expert.pl", createdAt: serverTimestamp() },
+        { email: "janusz.biznesu@o2.pl", createdAt: serverTimestamp() }
       ];
-      
-      await Promise.allSettled(seedPromises);
+
+      // Step 1: Add Blog, Portfolio, Testimonials, Submissions, Signups
+      const initialPromises = [
+        ...blogData.map(post => addDoc(collection(db, "blogPosts"), post).catch(e => errors.push(`Blog: ${e.message}`))),
+        ...portfolioData.map(item => addDoc(collection(db, "portfolioItems"), item).catch(e => errors.push(`Portfolio: ${e.message}`))),
+        ...testimonialData.map(testimonial => addDoc(collection(db, "testimonials"), testimonial).catch(e => errors.push(`Testimonial: ${e.message}`))),
+        ...submissionData.map(sub => addDoc(collection(db, "contactSubmissions"), sub).catch(e => errors.push(`Submission: ${e.message}`))),
+        ...signupData.map(signup => addDoc(collection(db, "leadMagnetSignups"), signup).catch(e => errors.push(`Signup: ${e.message}`)))
+      ];
+
+      // Step 2: Add a Client Project securely and get its ID for feedback
+      const projectRef = await addDoc(collection(db, "client_projects"), {
+        clientEmail: "katherina338@gmail.com",
+        name: "Gieralt Studio v2",
+        status: "in-progress",
+        progress: 75,
+        startDate: "2026-03-01",
+        estimatedCompletion: "2026-05-30",
+        currentPhase: "Wdrożenie (Development)",
+        phases: [
+          { name: "Strategia i UX", completed: true },
+          { name: "Projektowanie UI", completed: true },
+          { name: "Wdrożenie (Development)", completed: false },
+          { name: "Testy i Optymalizacja", completed: false },
+          { name: "Uruchomienie", completed: false }
+        ],
+        links: [
+          { name: "Makiety Figma", url: "https://figma.com", icon: "figma" },
+          { name: "Staging URL", url: "https://dev.gieralt.pl", icon: "doc" }
+        ],
+        createdAt: serverTimestamp()
+      }).catch(e => {
+        errors.push(`Project: ${e.message}`);
+        return null;
+      });
+
+      // Step 3: Add Feedbacks if project was created
+      if (projectRef) {
+        const feedbackData = [
+          {
+            projectId: projectRef.id,
+            message: "Cześć! Kiedy będziemy mogli zobaczyć pierwsze makiety sekcji Dashboard?",
+            sender: "client",
+            createdAt: serverTimestamp()
+          },
+          {
+            projectId: projectRef.id,
+            message: "Hej Anna! Kończymy właśnie dopracowywać widok 'Konta Klientów'. Prześlę link do Figmy jutro do godziny 12:00.",
+            sender: "admin",
+            createdAt: serverTimestamp()
+          }
+        ];
+        
+        await Promise.all(feedbackData.map(msg => addDoc(collection(db, "client_feedback"), msg).catch(e => errors.push(`Feedback: ${e.message}`))));
+      }
+
+      await Promise.allSettled(initialPromises);
       
       if (errors.length > 0) {
-        // Unique errors only
-        const uniqueErrors = [...new Set(errors)];
-        toast.error("Błąd podczas dodawania danych w: " + uniqueErrors.join(", "));
+        toast.error(`Zakończono z błędami: ${errors.length} nieudanych wpisów.`);
       } else {
-        toast.success("Dane zostały dodane pomyślnie!");
+        toast.success("Baza została pomyślnie wypełniona realistycznymi danymi!");
       }
-      // Seed invalidates all collections
-      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
-      queryClient.invalidateQueries({ queryKey: ['portfolioItems'] });
-      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
-      queryClient.invalidateQueries({ queryKey: ['contactSubmissions'] });
-      queryClient.invalidateQueries({ queryKey: ['leadMagnetSignups'] });
-      queryClient.invalidateQueries({ queryKey: ['client_projects'] });
-      queryClient.invalidateQueries({ queryKey: ['client_feedback'] });
+      
+      // Invalidate all collections to refresh UI
+      const collections = [
+        'blogPosts', 'portfolioItems', 'testimonials', 
+        'contactSubmissions', 'leadMagnetSignups', 
+        'client_projects', 'client_feedback'
+      ];
+      collections.forEach(col => queryClient.invalidateQueries({ queryKey: [col] }));
+
     } catch (error) {
-      toast.error("Błąd podczas dodawania danych: " + (error instanceof Error ? error.message : String(error)));
+      console.error("Critical error during seeding:", error);
+      toast.error("Błąd krytyczny podczas seedowania danych.");
     } finally {
       setSeeding(false);
     }
