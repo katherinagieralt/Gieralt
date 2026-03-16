@@ -57,8 +57,9 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tighter mb-6 text-slate-900 dark:text-white leading-[1.05]"
           >
-            Twoja Strona <strong>Nie Sprzedaje?</strong> <br className="hidden sm:block" />
-            Zaprojektuję ścieżkę konwersji, którą Twoi klienci <strong>pokochają.</strong>
+            Twoja Strona <span className="text-rose-500">Nie Sprzedaje?</span> <br className="hidden sm:block" />
+            Zaprojektuję <strong>Ścieżkę Konwersji</strong>, <br className="hidden sm:block" />
+            Którą Twoi Klienci <span className="text-rose-500">Pokochają.</span>
           </motion.h1>
 
           <motion.p
@@ -67,7 +68,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto font-light"
           >
-            Odzyskaj czas i przestań przepalać budżet. Jako UX/UI Designer & AI-Powered Strategist łączę 10 lat doświadczenia z precyzją sztucznej inteligencji, by stworzyć stronę, którą Twoi klienci <strong>pokochają</strong>.
+            Odzyskaj czas i przestań przepalać budżet. Jako UX/UI Designer & AI-Powered Strategist łączę 10 lat doświadczenia z precyzją sztucznej inteligencji. Tworzę strony, które nie tylko wyglądają premium, ale przede wszystkim zarabiają.
           </motion.p>
 
           <motion.div
@@ -77,11 +78,11 @@ export function Hero() {
             className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
           >
             <button 
-              onClick={() => trackEvent('hero_cta_click', { label: 'Sprawdź dostępność' })}
+              onClick={() => trackEvent('hero_cta_click', { label: 'Umów bezpłatną konsultację' })}
               className="group relative inline-flex items-center justify-center px-10 py-5 text-sm uppercase tracking-widest font-bold text-white transition-all duration-300 bg-rose-500 rounded-full hover:bg-rose-600 hover:shadow-2xl hover:shadow-rose-500/20 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 dark:focus:ring-offset-slate-900 w-full sm:w-auto overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-3">
-                Sprawdź dostępność w tym miesiącu
+                Umów Bezpłatną Konsultację
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
               {/* Subtle shine effect */}
@@ -91,7 +92,7 @@ export function Hero() {
               <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CheckCircle className="h-4 w-4 text-emerald-500" />
               </div>
-              Zaprojektujmy Twój sukces
+              Gwarancja Satysfakcji
             </button>
           </motion.div>
 
