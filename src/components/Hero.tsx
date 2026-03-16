@@ -57,8 +57,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             className="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tighter mb-6 text-slate-900 dark:text-white leading-[1.05]"
           >
-            Twoja Strona <strong>Nie Sprzedaje?</strong> <br className="hidden sm:block" />
-            Zaprojektuję ścieżkę konwersji, którą Twoi klienci <strong>pokochają.</strong>
+            Landing page klasy <strong>Premium</strong> w 7 dni. <br className="hidden sm:block" />
+            Szybkość <strong>AI</strong>, precyzja Eksperta.
           </motion.h1>
 
           <motion.p
@@ -67,7 +67,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 mb-8 leading-relaxed max-w-2xl mx-auto font-light"
           >
-            Odzyskaj czas i przestań przepalać budżet. Jako UX/UI Designer & AI-Powered Strategist łączę 10 lat doświadczenia z precyzją sztucznej inteligencji, by stworzyć stronę, którą Twoi klienci <strong>pokochają</strong>.
+            Dla firm, które nie mają czasu na miesiące wdrożeń. Łączę 10 lat doświadczenia w UX z wydajnością sztucznej inteligencji, by dostarczyć Twój projekt 3x szybciej bez utraty jakości.
           </motion.p>
 
           <motion.div
