@@ -178,7 +178,14 @@ export function ClientPortal() {
               <FileText className="h-8 w-8 text-slate-400" />
             </div>
             <h2 className="text-2xl font-display font-semibold mb-2">Brak aktywnych projektów</h2>
-            <p className="text-slate-500 dark:text-slate-400">Nie znaleźliśmy żadnych projektów przypisanych do Twojego konta.</p>
+            <p className="text-slate-500 dark:text-slate-400 mb-8">Nie znaleźliśmy żadnych projektów przypisanych do Twojego konta. Jeśli uważasz, że to błąd, skontaktuj się ze mną.</p>
+            <a 
+              href="mailto:kontakt@katarzynagieralt.pl"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-500/20"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Skontaktuj się ze mną
+            </a>
           </div>
         ) : (
           <div className="max-w-6xl mx-auto">

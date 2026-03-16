@@ -12,8 +12,8 @@ interface SEOProps {
 }
 
 export function SEO({
-  title = "Katarzyna Gierałt | UX/UI Designer & AI Expert",
-  description = "Projektuję nowoczesne interfejsy i wdrażam rozwiązania AI, które pomagają firmom rosnąć. Sprawdź moje portfolio i bloga.",
+  title = "Katarzyna Gierałt | Premium Landing Pages & UX Strategy",
+  description = "Zwiększam Twoją sprzedaż poprzez design. Landing Page Premium w 7 dni. Łączę 10 lat doświadczenia w UX z precyzją AI.",
   canonical = "https://katarzynagieralt.pl",
   ogImage,
   image,
@@ -22,7 +22,7 @@ export function SEO({
   jsonLd
 }: SEOProps) {
   const siteTitle = title.includes("Katarzyna Gierałt") ? title : `${title} | Katarzyna Gierałt`;
-  const finalImage = image || ogImage || "https://katarzynagieralt.pl/og-image.jpg";
+  const finalImage = image || ogImage || "https://katarzynagieralt.pl/og-image.png";
 
   return (
     <Helmet>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth, db, secondaryAuth } from "../firebase";
 import { collection, getDocs, query, orderBy, Timestamp, addDoc, deleteDoc, doc, serverTimestamp, writeBatch, updateDoc, onSnapshot, limit } from "firebase/firestore";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { Loader2, LogOut, Mail, Users, Calendar, DollarSign, Clock, Plus, Trash2, BookOpen, Briefcase, Database, Edit2, Star, Download, MessageSquare, Send, Sparkles, X, Bell, ArrowUpRight, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { generateBlogDraft, generatePortfolioDraft, generateFollowUpEmail, generateTopicIdeas, generateSocialPosts, generateImagePrompt, TopicIdea, SocialPosts, translateToEnglish, generateSEOMeta, generateAnalyticsSummary, generateWeeklyReport, generateABTestSuggestions } from "../services/aiLeadService";
@@ -16,6 +16,7 @@ import { ProjectHealthScore } from "./ProjectHealthScore";
 import { AdminStats } from "./admin/AdminStats";
 import { AdminNav } from "./admin/AdminNav";
 import { useAdminStore } from "../stores/useAdminStore";
+import { AdminClients } from "./AdminClients";
 
 interface ContactSubmission {
   id: string;
@@ -513,17 +514,51 @@ export function AdminDashboard() {
 
   const handleAddClientProject = async (e: React.FormEvent) => {
     e.preventDefault();
+    const clientEmail = newClientProject.clientEmail.toLowerCase();
+    
     try {
+      // 1. Jeśli to nowy projekt (nie edycja), spróbuj utworzyć konto użytkownika
+      if (!editingId) {
+        // Generowanie silnego, losowego hasła (16 znaków)
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+        const randomPassword = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+          .map((x) => charset[x % charset.length])
+          .join("");
+
+        try {
+          // Tworzenie użytkownika w secondaryAuth (zapobiega wylogowaniu admina)
+          await createUserWithEmailAndPassword(secondaryAuth, clientEmail, randomPassword);
+          
+          // Natychmiastowe wylogowanie z instancji secondaryAuth
+          await signOut(secondaryAuth);
+          
+          // Wysłanie maila z linkiem do ustawienia własnego hasła
+          await sendPasswordResetEmail(auth, clientEmail);
+          
+          toast.success(`Konto Auth dla ${clientEmail} utworzone. Zaproszenie wysłane!`);
+        } catch (authError: any) {
+          if (authError.code === 'auth/email-already-in-use') {
+            console.log("Użytkownik już istnieje w Firebase Auth, dodaję tylko projekt.");
+          } else {
+            throw authError; // Inne błędy Auth przerywają proces
+          }
+        }
+      }
+
+      // 2. Logika Firestore
       const projectData = {
         ...newClientProject,
-        clientEmail: newClientProject.clientEmail.toLowerCase()
+        clientEmail: clientEmail
       };
       
       if (editingId) {
         await updateDoc(doc(db, "client_projects", editingId), projectData);
+        toast.success("Projekt zaktualizowany.");
       } else {
         await addDoc(collection(db, "client_projects"), { ...projectData, createdAt: serverTimestamp() });
+        toast.success("Projekt dodany do bazy Firestore.");
       }
+
       setNewClientProject({ 
         clientEmail: "", 
         name: "", 
@@ -547,8 +582,9 @@ export function AdminDashboard() {
       setShowAddModal(false);
       setEditingId(null);
       queryClient.invalidateQueries({ queryKey: ['client_projects'] });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding/updating client project:", error);
+      toast.error(`Błąd: ${error.message || "Wystąpił problem przy tworzeniu konta/projektu"}`);
     }
   };
 
@@ -1825,6 +1861,10 @@ export function AdminDashboard() {
               </div>
             )}
           </div>
+        )}
+
+        {activeTab === "accounts" && (
+          <AdminClients />
         )}
 
         {activeTab === "ai_strategy" && (

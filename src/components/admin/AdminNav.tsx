@@ -26,6 +26,7 @@ const TABS: { id: AdminTab; icon: React.ElementType; label: (c: AdminNavProps['c
   { id: "testimonials", icon: Star, label: (c) => `Opinie (${c.testimonials})` },
   { id: "ai_strategy", icon: Sparkles, label: () => "AI Strategy" },
   { id: "seo_monitoring", icon: Search, label: () => "SEO" },
+  { id: "accounts", icon: Users, label: () => "Konta Klientów" },
 ];
 
 export function AdminNav({ counts, newLeadCount }: AdminNavProps) {

@@ -7,46 +7,17 @@
     <meta name="description" content="Landing page klasy Premium w 7 dni. Łączę 10 lat doświadczenia w UX z wydajnością sztucznej inteligencji, by dostarczyć Twój projekt 3x szybciej." />
     <meta name="keywords" content="landing page, ux design, web design, ai design, premium landing page" />
     
-    <!-- Preconnect to Google Fonts -->
+    <!-- Preconnect & Preload for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@500;700&display=swap" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
     
-    <!-- LinkedIn Insight Tag -->
-    <script type="text/javascript">
-    _linkedin_partner_id = "YOUR_ID";
-    window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-    window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-    </script>
-    <script type="text/javascript">
-    (function(l) {
-    if (!l){window._linkedin_partner_id = "YOUR_ID"; window._linkedin_data_partner_ids = [_linkedin_partner_id];}
-    var s = document.getElementsByTagName("script")[0];
-    var b = document.createElement("script");
-    b.type = "text/javascript";b.async = true;
-    b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-    s.parentNode.insertBefore(b, s);})(window._linkedin_data_partner_ids);
-    </script>
-
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'YOUR_PIXEL_ID');
-    fbq('track', 'PageView');
-    </script>
-    <!-- End Meta Pixel Code -->
-
-    <!-- Google tag (gtag.js) -->
+    <!-- Analytics & Tracking (Configured via GTM/Direct tags) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1JPZQHZ2V"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -55,19 +26,14 @@
       gtag('config', 'G-L1JPZQHZ2V');
     </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-YOUR_CONVERSION_ID"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-YOUR_CONVERSION_ID');
-    </script>
+    <!-- Meta Pixel Code (Removed placeholders for launch) -->
+
+    <!-- Google Ads (Removed placeholders for launch) -->
   </head>
   <body>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"
-    /></noscript>
+    <noscript>
+      <div style="display:none">Tracking disabled for noscript</div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

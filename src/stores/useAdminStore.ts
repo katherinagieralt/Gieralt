@@ -13,7 +13,8 @@ export type AdminTab =
   | 'client_projects'
   | 'messages'
   | 'ai_strategy'
-  | 'seo_monitoring';
+  | 'seo_monitoring'
+  | 'accounts';
 
 export type ClientSubTab = 'projects' | 'proposals';
 

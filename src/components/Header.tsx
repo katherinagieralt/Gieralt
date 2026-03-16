@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Globe, Sun, Moon, User } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAccessibility } from "../context/AccessibilityContext";
 
@@ -72,9 +73,9 @@ export function Header({ onOpenCalendly }: HeaderProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tighter hover:opacity-80 transition-opacity">
+          <Link to="/" className="text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tighter hover:opacity-80 transition-opacity">
             Katarzyna<span className="text-gradient">Gierałt</span>
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8">

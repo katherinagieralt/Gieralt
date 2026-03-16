@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 const LandingPage = lazy(() => import("./components/LandingPage").then(mod => ({ default: mod.LandingPage })));
 const Login = lazy(() => import("./components/Login").then(mod => ({ default: mod.Login })));
 const AdminDashboard = lazy(() => import("./components/AdminDashboard").then(mod => ({ default: mod.AdminDashboard })));
+const AdminClients = lazy(() => import("./components/AdminClients").then(mod => ({ default: mod.AdminClients })));
 const ProjectDetail = lazy(() => import("./components/ProjectDetail").then(mod => ({ default: mod.ProjectDetail })));
 const ThankYou = lazy(() => import("./components/ThankYou").then(mod => ({ default: mod.ThankYou })));
 const CaseStudyPage = lazy(() => import("./components/CaseStudyPage").then(mod => ({ default: mod.CaseStudyPage })));
@@ -32,6 +33,9 @@ function GlobalLoader() {
     </div>
   );
 }
+
+const CookieBanner = lazy(() => import("./components/CookieBanner").then(mod => ({ default: mod.CookieBanner })));
+const NotFound = lazy(() => import("./components/NotFound").then(mod => ({ default: mod.NotFound })));
 
 export default function App() {
   return (
@@ -49,12 +53,15 @@ export default function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/clients" element={<AdminClients />} />
                 <Route path="/portfolio/:id" element={<ProjectDetail />} />
                 <Route path="/thank-you" element={<ThankYou />} />
                 <Route path="/case-study/:id" element={<CaseStudyPage />} />
                 <Route path="/client/login" element={<ClientLogin />} />
                 <Route path="/client" element={<ClientPortal />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
+              <CookieBanner />
             </Suspense>
           </BrowserRouter>
         </MotionConfig>

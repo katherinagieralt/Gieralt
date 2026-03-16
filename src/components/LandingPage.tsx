@@ -133,7 +133,6 @@ export function LandingPage() {
         <PrivacyPolicy isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
         <TermsOfService isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
         <CalendlyModal isOpen={isCalendlyOpen} onClose={() => setIsCalendlyOpen(false)} />
-        <CookieBanner />
         <FloatingCTA onOpenCalendly={() => setIsCalendlyOpen(true)} />
         <ExitIntentPopup />
 

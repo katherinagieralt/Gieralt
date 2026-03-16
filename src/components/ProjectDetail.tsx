@@ -119,7 +119,7 @@ export function ProjectDetail() {
             className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-rose-500 dark:hover:text-white transition-colors mb-6 group font-medium"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Powrót do strony głównej
+            Wróć do Portfolio
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">

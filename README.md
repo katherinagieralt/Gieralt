@@ -3,6 +3,7 @@
 
 # Gieralt — Creative Studio Portfolio & Client OS
 
+[![Project Status: Launch Ready](https://img.shields.io/badge/Status-Launch%20Ready-success?style=for-the-badge)](https://katarzynagieralt.pl)
 [![CI — Lint & Tests](https://github.com/katherinagieralt/Gieralt/actions/workflows/ci.yml/badge.svg)](https://github.com/katherinagieralt/Gieralt/actions/workflows/ci.yml)
 [![Deploy to Firebase](https://github.com/katherinagieralt/Gieralt/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/katherinagieralt/Gieralt/actions/workflows/firebase-hosting-merge.yml)
 [![Vitest](https://img.shields.io/badge/tested%20with-vitest-6E9F18?logo=vitest)](https://vitest.dev)
