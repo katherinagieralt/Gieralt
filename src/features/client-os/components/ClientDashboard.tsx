@@ -35,13 +35,21 @@ export function ClientDashboard({ projectId, userId, defaultMode, children }: Cl
 
   if (loading) {
     return (
-      <div className="w-full h-64 flex flex-col items-center justify-center space-y-4">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 bg-blue-500/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-3 h-3 bg-blue-500/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-3 h-3 bg-blue-500/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+      <div className="max-w-6xl mx-auto space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="h-24 w-full bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800" />
+        
+        {/* Grid Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="h-64 w-full bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800" />
+            <div className="h-48 w-full bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800" />
+          </div>
+          <div className="space-y-6">
+            <div className="h-40 w-full bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800" />
+            <div className="h-80 w-full bg-slate-100 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800" />
+          </div>
         </div>
-        <p className="text-sm text-slate-500 animate-pulse">Ładowanie środowiska pracy...</p>
       </div>
     );
   }
