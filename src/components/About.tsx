@@ -1,8 +1,12 @@
-import { motion } from "motion/react";
-import { Linkedin, Twitter, Globe } from "lucide-react";
-import { ImageWithBlur } from "./ImageWithBlur";
+import React from 'react';
+import { motion } from 'motion/react';
+import { Linkedin, Twitter, MessageSquare, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { ImageWithBlur } from './ImageWithBlur';
 
-export function About() {
+export const About = () => {
+  const { i18n } = useTranslation();
+
   return (
     <section className="py-16 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300" id="about">
       {/* Premium Background Effects */}
@@ -45,20 +49,30 @@ export function About() {
             className="w-full md:w-7/12"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-500 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
-              O Mnie
+              {i18n.language === 'pl' ? 'O Mnie' : 'About Me'}
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-4xl font-display font-light text-slate-900 dark:text-white mb-8 leading-tight tracking-tight">
-              Projektuję z pasją, <span className="font-bold text-gradient">optymalizuję dzięki AI.</span>
+              {i18n.language === 'pl' ? (
+                <>Projektuję z pasją, <span className="font-bold text-gradient">optymalizuję dzięki AI.</span></>
+              ) : (
+                <>I design with passion, <span className="font-bold text-gradient">optimize with AI.</span></>
+              )}
             </h2>
             <div className="space-y-6 text-slate-700 dark:text-slate-300 text-base leading-relaxed mb-8 font-light">
               <p>
-                Przez 10 lat ewoluowałam od grafika do stratega UX. Nie jestem tylko wykonawcą poleceń – jestem Twoim partnerem biznesowym, który dowozi konkretne wyniki.
+                {i18n.language === 'pl' 
+                  ? "Przez 10 lat ewoluowałam od grafika do stratega UX. Nie jestem tylko wykonawcą poleceń – jestem Twoim partnerem biznesowym, który dowozi konkretne wyniki."
+                  : "Over 10 years, I've evolved from a graphic designer to a UX strategist. I'm not just order-taker - I'm your business partner who delivers concrete results."}
               </p>
               <p>
-                Moją supermocą jest łączenie estetyki z matematyczną precyzją narzędzi AI. Jestem designerem nowej generacji. Nie tylko rysuję ładne obrazki, ale projektuję rozwiązania, które zarabiają.
+                {i18n.language === 'pl'
+                  ? "Moją supermocą jest łączenie estetyki z matematyczną precyzją narzędzi AI. Jestem designerem nowej generacji. Nie tylko rysuję ładne obrazki, ale projektuję rozwiązania, które zarabiają."
+                  : "My superpower is combining aesthetics with the mathematical precision of AI tools. I'm a next-generation designer. I don't just draw pretty pictures, I design solutions that generate revenue."}
               </p>
               <p>
-                Dostarczam strony "na wczoraj", ale bez kompromisów w jakości. Szanuję Twój czas, dlatego mój proces jest szybki, decyzyjny i nastawiony na maksymalną konwersję.
+                {i18n.language === 'pl'
+                  ? "Dostarczam strony \"na wczoraj\", ale bez kompromisów w jakości. Szanuję Twój czas, dlatego mój proces jest szybki, decyzyjny i nastawiony na maksymalną konwersję."
+                  : "I deliver websites \"for yesterday\", but without compromising on quality. I respect your time, which is why my process is fast, decisive, and focused on maximum conversion."}
               </p>
             </div>
 
@@ -70,7 +84,9 @@ export function About() {
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
                 <div className="text-5xl font-display font-light text-slate-900 dark:text-white mb-2">10+</div>
-                <div className="text-xs text-slate-600 dark:text-slate-300 uppercase tracking-widest font-bold">Lat w branży</div>
+                <div className="text-xs text-slate-600 dark:text-slate-300 uppercase tracking-widest font-bold">
+                  {i18n.language === 'pl' ? 'Lat w branży' : 'Years Experience'}
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -79,7 +95,9 @@ export function About() {
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
                 <div className="text-5xl font-display font-light text-slate-900 dark:text-white mb-2">50+</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">Projektów</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
+                  {i18n.language === 'pl' ? 'Projektów' : 'Projects'}
+                </div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -88,7 +106,9 @@ export function About() {
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
                 <div className="text-5xl font-display font-light text-slate-900 dark:text-white mb-2">100%</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">Terminowość</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold">
+                  {i18n.language === 'pl' ? 'Terminowość' : 'On-time delivery'}
+                </div>
               </motion.div>
             </div>
 
@@ -127,4 +147,4 @@ export function About() {
       </div>
     </section>
   );
-}
+};

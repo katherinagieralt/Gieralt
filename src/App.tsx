@@ -1,71 +1,93 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import React, { useState, useEffect } from 'react';
 
-import { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MotionConfig } from "motion/react";
-import { Toaster } from "react-hot-toast";
-import { PearlBackground } from "./components/PearlBackground";
-import { AccessibilityProvider } from "./context/AccessibilityContext";
-import { AccessibilityPanel } from "./components/AccessibilityPanel";
-import { ErrorBoundary } from "./components/ErrorBoundary";
-import { OfflineBanner } from "./components/OfflineBanner";
-import { PWAUpdatePrompt } from "./components/PWAUpdatePrompt";
-import { Loader2 } from "lucide-react";
+// Import Components
+import { Navbar } from './components/Navbar';
+import { Hero } from './components/Hero';
+import { ImpactSection } from './components/ImpactSection';
+import { About } from './components/About';
+import { AIHuman } from './components/AIHuman';
+import { Process } from './components/Process';
+import { Portfolio } from './components/Portfolio';
+import { Testimonials } from './components/Testimonials';
+import { Pricing } from './components/Pricing';
+import { FAQ } from './components/FAQ';
+import { Contact } from './components/Contact';
+import { Footer } from './components/Footer';
 
-// Lazy-loaded components (splits the bundle and improves load time drastically)
-const LandingPage = lazy(() => import("./components/LandingPage").then(mod => ({ default: mod.LandingPage })));
-const Login = lazy(() => import("./components/Login").then(mod => ({ default: mod.Login })));
-const AdminDashboard = lazy(() => import("./components/AdminDashboard").then(mod => ({ default: mod.AdminDashboard })));
-const AdminClients = lazy(() => import("./components/AdminClients").then(mod => ({ default: mod.AdminClients })));
-const ProjectDetail = lazy(() => import("./components/ProjectDetail").then(mod => ({ default: mod.ProjectDetail })));
-const ThankYou = lazy(() => import("./components/ThankYou").then(mod => ({ default: mod.ThankYou })));
-const CaseStudyPage = lazy(() => import("./components/CaseStudyPage").then(mod => ({ default: mod.CaseStudyPage })));
-const ClientLogin = lazy(() => import("./components/ClientLogin").then(mod => ({ default: mod.ClientLogin })));
-const ClientPortal = lazy(() => import("./components/ClientPortal").then(mod => ({ default: mod.ClientPortal })));
+// Design System Components
+import { ThemeProvider } from './components/ThemeProvider';
+import { AccessibilityProvider } from './components/AccessibilityContext';
+import { AnalyticsProvider } from './components/AnalyticsProvider';
+import { PearlBackground } from './components/PearlBackground';
+import { ScrollProgress } from './components/ScrollProgress';
+import { AccessibilityPanel } from './components/AccessibilityPanel';
+import { FloatingCTA } from './components/FloatingCTA';
 
-function GlobalLoader() {
-  return (
-    <div className="h-screen w-full flex items-center justify-center bg-transparent">
-      <Loader2 className="h-8 w-8 animate-spin text-rose-500" />
-    </div>
-  );
-}
+const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  const [hasError, setHasError] = useState(false);
 
-const CookieBanner = lazy(() => import("./components/CookieBanner").then(mod => ({ default: mod.CookieBanner })));
-const NotFound = lazy(() => import("./components/NotFound").then(mod => ({ default: mod.NotFound })));
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Caught by ErrorBoundary:', event.error);
+      setHasError(true);
+    };
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+  
+  if (hasError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-6 text-center">
+        <div>
+          <h1 className="text-2xl font-bold mb-4">Ups! Coś poszło nie tak.</h1>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-rose-500 rounded-full font-bold"
+          >
+            Odśwież stronę
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  return <>{children}</>;
+};
 
 export default function App() {
+  const handleOpenCalendly = () => {
+    // Placeholder for Calendly integration
+    console.log('Opening Calendly...');
+  };
+
   return (
     <ErrorBoundary>
-      <AccessibilityProvider>
-        <MotionConfig reducedMotion="user">
-          <BrowserRouter>
-            <OfflineBanner />
-            <PWAUpdatePrompt />
-            <Toaster position="top-right" />
-            <PearlBackground />
-            <AccessibilityPanel />
-            <Suspense fallback={<GlobalLoader />}>
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin/clients" element={<AdminClients />} />
-                <Route path="/portfolio/:id" element={<ProjectDetail />} />
-                <Route path="/thank-you" element={<ThankYou />} />
-                <Route path="/case-study/:id" element={<CaseStudyPage />} />
-                <Route path="/client/login" element={<ClientLogin />} />
-                <Route path="/client" element={<ClientPortal />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <CookieBanner />
-            </Suspense>
-          </BrowserRouter>
-        </MotionConfig>
-      </AccessibilityProvider>
+      <AnalyticsProvider>
+        <ThemeProvider>
+          <AccessibilityProvider>
+            <div className="relative min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-200 font-sans antialiased selection:bg-rose-500 selection:text-white">
+              <PearlBackground />
+              <ScrollProgress />
+              <Navbar />
+              <main>
+                <Hero />
+                <ImpactSection />
+                <About />
+                <AIHuman />
+                <Process />
+                <Portfolio />
+                <Testimonials />
+                <Pricing />
+                <FAQ />
+                <Contact />
+              </main>
+              <Footer />
+              <FloatingCTA onOpenCalendly={handleOpenCalendly} />
+              <AccessibilityPanel />
+            </div>
+          </AccessibilityProvider>
+        </ThemeProvider>
+      </AnalyticsProvider>
     </ErrorBoundary>
   );
 }

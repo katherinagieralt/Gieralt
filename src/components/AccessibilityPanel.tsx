@@ -15,7 +15,7 @@ import {
   Minus,
   Plus
 } from 'lucide-react';
-import { useAccessibility } from '../context/AccessibilityContext';
+import { useAccessibility } from './AccessibilityContext';
 
 export function AccessibilityPanel() {
   const { settings, updateSetting, resetSettings, isPanelOpen, setIsPanelOpen } = useAccessibility();

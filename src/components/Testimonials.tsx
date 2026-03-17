@@ -1,64 +1,40 @@
-import { useCallback, useState } from "react";
-import { orderBy, limit } from "firebase/firestore";
+import React, { useCallback, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Quote, Loader2, ArrowRight, ArrowLeft, Linkedin } from "lucide-react";
+import { Quote, ArrowRight, ArrowLeft, Linkedin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { ImageWithBlur } from "./ImageWithBlur";
-import { useFirestoreQuery } from "../hooks/useFirestoreQuery";
-import { Timestamp } from "firebase/firestore";
 
-interface Testimonial {
-  id: string;
-  name: string;
-  role: string;
-  content: string;
-  avatar?: string;
-  rating: number;
-  projectImage?: string;
-  projectLink?: string;
-  linkedInUrl?: string;
-  createdAt: Timestamp;
-}
-
-// Fallback data shown when Firestore has no testimonials yet
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
-  {
-    id: "1",
-    name: "Anna Nowak",
-    role: "Marketing Manager, EcoStyle",
-    content: "Współpraca z Katarzyną to była świetna inwestycja. Jej strategiczne podejście do UX sprawiło, że nasi klienci szybciej podejmują decyzje zakupowe. Nowy landing page zwiększył naszą konwersję o rekordowe 40%.",
-    rating: 5,
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
-    projectImage: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80&w=800&h=600",
-    projectLink: "#",
-    linkedInUrl: "#",
-    createdAt: Timestamp.fromDate(new Date()),
-  },
-  {
-    id: "2",
-    name: "Marek Kowalski",
-    role: "CEO, TechFlow",
-    content: "Współpraca z Katarzyną to czysta przyjemność. Jej podejście do UX zmieniło sposób, w jaki nasi klienci postrzegają nasz produkt. Landing page, który dla nas zaprojektowała, zwiększył naszą konwersję o ponad 40%.",
-    rating: 5,
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
-    projectImage: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&q=80&w=800&h=600",
-    projectLink: "#",
-    linkedInUrl: "#",
-    createdAt: Timestamp.fromDate(new Date()),
-  },
-];
-
-export function Testimonials() {
+export const Testimonials = () => {
+  const { i18n } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  // ✅ FIX: useFirestoreQuery (React Query cache) zamiast getDocs bezpośrednio
-  const { data: rawTestimonials = [], isLoading } = useFirestoreQuery<Testimonial>(
-    ["testimonials"],
-    "testimonials",
-    [orderBy("createdAt", "desc"), limit(10)]
-  );
-
-  const testimonials = rawTestimonials.length > 0 ? rawTestimonials : FALLBACK_TESTIMONIALS;
+  const testimonials = [
+    {
+      id: "1",
+      name: "Anna Nowak",
+      role: "Marketing Manager, EcoStyle",
+      content: i18n.language === 'pl'
+        ? "Współpraca z Katarzyną to była świetna inwestycja. Jej strategiczne podejście do UX sprawiło, że nasi klienci szybciej podejmują decyzje zakupowe. Nowy landing page zwiększył naszą konwersję o rekordowe 40%."
+        : "Working with Katarzyna was a great investment. Her strategic approach to UX made our customers make purchasing decisions faster. The new landing page increased our conversion by a record 40%.",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
+      projectImage: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&q=80&w=800&h=600",
+      projectLink: "#",
+      linkedInUrl: "#",
+    },
+    {
+      id: "2",
+      name: "Marek Kowalski",
+      role: "CEO, TechFlow",
+      content: i18n.language === 'pl'
+        ? "Współpraca z Katarzyną to czysta przyjemność. Jej podejście do UX zmieniło sposób, w jaki nasi klienci postrzegają nasz produkt. Landing page, który dla nas zaprojektowała, zwiększył naszą konwersję o ponad 40%."
+        : "Working with Katarzyna is a pure pleasure. Her approach to UX changed the way our customers perceive our product. The landing page she designed for us increased our conversion by over 40%.",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
+      projectImage: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&q=80&w=800&h=600",
+      projectLink: "#",
+      linkedInUrl: "#",
+    },
+  ];
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -103,13 +79,6 @@ export function Testimonials() {
     );
   };
 
-  if (isLoading)
-    return (
-      <div className="py-16 flex justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-rose-500" />
-      </div>
-    );
-
   return (
     <section className="bg-slate-50 dark:bg-slate-950 py-16 relative overflow-hidden transition-colors duration-300" id="testimonials">
       {/* Premium Background Effects */}
@@ -117,14 +86,14 @@ export function Testimonials() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-rose-500/5 dark:bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-16 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-500 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm"
           >
-            Referencje
+            {i18n.language === 'pl' ? 'Referencje' : 'Testimonials'}
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -133,8 +102,13 @@ export function Testimonials() {
             transition={{ delay: 0.1 }}
             className="text-3xl sm:text-4xl lg:text-4xl font-display font-light text-slate-900 dark:text-white mb-8 leading-tight tracking-tight"
           >
-            Zobacz, jak pomagam rosnąć <br className="hidden sm:block" />
-            <span className="font-bold text-gradient">moim partnerom</span>
+            {i18n.language === 'pl' ? (
+              <>Zobacz, jak pomagam rosnąć <br className="hidden sm:block" />
+              <span className="font-bold text-gradient">moim partnerom</span></>
+            ) : (
+              <>See how I help my <br className="hidden sm:block" />
+              <span className="font-bold text-gradient">partners grow</span></>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -143,7 +117,9 @@ export function Testimonials() {
             transition={{ delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 font-light leading-relaxed max-w-2xl mx-auto"
           >
-            Dowiedz się, jak design napędza wzrost i buduje przewagę konkurencyjną.
+            {i18n.language === 'pl'
+              ? 'Dowiedz się, jak design napędza wzrost i buduje przewagę konkurencyjną.'
+              : 'Learn how design drives growth and builds competitive advantage.'}
           </motion.p>
         </div>
 
@@ -222,7 +198,7 @@ export function Testimonials() {
                             rel="noopener noreferrer"
                             className="absolute bottom-6 right-6 inline-flex items-center justify-center px-6 py-3 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full hover:bg-white dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-all duration-300 shadow-lg opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0"
                           >
-                            Odwiedź stronę <ArrowRight className="ml-2 h-4 w-4" />
+                            {i18n.language === 'pl' ? 'Odwiedź stronę' : 'Visit website'} <ArrowRight className="ml-2 h-4 w-4" />
                           </a>
                         )}
                       </div>
@@ -316,4 +292,4 @@ export function Testimonials() {
       </div>
     </section>
   );
-}
+};

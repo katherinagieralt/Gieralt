@@ -1,19 +1,10 @@
+import React, { useState, FormEvent } from "react";
 import { motion } from "motion/react";
-import { Mail, Calendar, ArrowRight, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAnalytics } from "./AnalyticsProvider";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { analyzeLead } from "../services/aiLeadService";
-import { sendExternalNotification, formatSlackLeadNotification } from "../services/notificationService";
-import toast from "react-hot-toast";
+import { Mail, Calendar, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-export function Contact() {
-  const { trackEvent } = useAnalytics();
-  const navigate = useNavigate();
-  const { executeRecaptcha } = useGoogleReCaptcha();
+export const Contact = () => {
+  const { i18n } = useTranslation();
   const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formData, setFormData] = useState({
     name: "",
@@ -27,66 +18,22 @@ export function Contact() {
     // Basic validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Proszę wypełnić wszystkie pola.");
       return;
     }
     if (!emailRegex.test(formData.email)) {
-      toast.error("Proszę podać poprawny adres e-mail.");
       return;
     }
 
     setFormState("submitting");
-    trackEvent('contact_form_submit_start', { variant: "simplified" });
 
-    try {
-      let recaptchaToken = "";
-      if (executeRecaptcha) {
-        recaptchaToken = await executeRecaptcha("contact_form");
-      }
-
-      let aiInsights = null;
-      try {
-        aiInsights = await analyzeLead({
-          ...formData,
-          budget: "Nie podano",
-          timeline: "Nie podano"
-        });
-      } catch (aiError) {
-        console.error("AI Analysis failed:", aiError);
-      }
-
-      await addDoc(collection(db, "contactSubmissions"), {
-        ...formData,
-        variant: "simplified",
-        recaptchaToken,
-        aiInsights,
-        createdAt: serverTimestamp(),
-        status: "new"
-      });
-
-      // Send external notifications
-      try {
-        const slackPayload = formatSlackLeadNotification({ ...formData, aiInsights });
-        await sendExternalNotification('slack', slackPayload);
-      } catch (notifError) {
-        console.error("External notification failed:", notifError);
-      }
-
+    // Simulate network request for the static portfolio
+    setTimeout(() => {
       setFormState("success");
-      toast.success("Wiadomość wysłana pomyślnie!");
-      trackEvent('contact_form_submit_success', { variant: "simplified" });
       setFormData({ name: "", email: "", message: "" });
       
-      // Redirect after a short delay to show success state
-      setTimeout(() => {
-        navigate("/thank-you");
-      }, 1500);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      setFormState("error");
-      toast.error("Wystąpił błąd podczas wysyłania. Spróbuj ponownie.");
-      trackEvent('contact_form_submit_error', { error: String(error) });
-    }
+      // Reset success state after some time
+      setTimeout(() => setFormState("idle"), 5000);
+    }, 1500);
   };
 
   return (
@@ -110,7 +57,7 @@ export function Contact() {
                 viewport={{ once: true }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-500 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm w-fit"
               >
-                Kontakt
+                {i18n.language === 'pl' ? 'Kontakt' : 'Contact'}
               </motion.div>
               <motion.h2 
                 initial={{ opacity: 0, y: 20 }}
@@ -119,7 +66,11 @@ export function Contact() {
                 transition={{ delay: 0.1 }}
                 className="text-3xl sm:text-4xl lg:text-4xl font-display font-light text-slate-900 dark:text-white mb-6 leading-tight tracking-tight"
               >
-                Zacznijmy od <span className="font-bold text-gradient">rozmowy.</span>
+                {i18n.language === 'pl' ? (
+                  <>Zacznijmy od <span className="font-bold text-gradient">rozmowy.</span></>
+                ) : (
+                  <>Let's start with a <span className="font-bold text-gradient">conversation.</span></>
+                )}
               </motion.h2>
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
@@ -128,7 +79,9 @@ export function Contact() {
                 transition={{ delay: 0.2 }}
                 className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 font-light leading-relaxed mb-8"
               >
-                Nie sprzedaję kota w worku. Umów się na darmową, 15-minutową konsultację, żeby sprawdzić, czy nadajemy na tych samych falach.
+                {i18n.language === 'pl'
+                  ? 'Nie sprzedaję kota w worku. Umów się na darmową, 15-minutową konsultację, żeby sprawdzić, czy nadajemy na tych samych falach.'
+                  : "I don't sell a pig in a poke. Fast-track a free 15-minute consultation to see if we're on the same wavelength."}
               </motion.p>
               
               <div className="space-y-8">
@@ -143,13 +96,15 @@ export function Contact() {
                     <Calendar className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-900 dark:text-white text-base mb-1">Dostępność:</div>
+                    <div className="font-semibold text-slate-900 dark:text-white text-base mb-1">
+                      {i18n.language === 'pl' ? 'Dostępność:' : 'Availability:'}
+                    </div>
                     <div className="text-sm text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-2">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                       </span>
-                      Ostatnie 2 terminy w tym miesiącu
+                      {i18n.language === 'pl' ? 'Ostatnie 2 terminy w tym miesiącu' : 'Last 2 spots this month'}
                     </div>
                   </div>
                 </motion.div>
@@ -191,13 +146,17 @@ export function Contact() {
                   <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500 mb-6 shadow-sm border border-emerald-100 dark:border-emerald-500/20">
                     <CheckCircle2 className="h-10 w-10" />
                   </div>
-                  <h3 className="text-2xl font-display font-medium text-slate-900 dark:text-white mb-3">Wiadomość wysłana!</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-base font-light mb-8">Odezwę się w ciągu 4h roboczych.</p>
+                  <h3 className="text-2xl font-display font-medium text-slate-900 dark:text-white mb-3">
+                    {i18n.language === 'pl' ? 'Wiadomość wysłana!' : 'Message sent!'}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-base font-light mb-8">
+                    {i18n.language === 'pl' ? 'Odezwę się w ciągu 4h roboczych.' : "I'll get back to you within 4 business hours."}
+                  </p>
                   <button 
                     onClick={() => setFormState("idle")}
                     className="text-rose-500 hover:text-rose-500 text-sm font-semibold uppercase tracking-wider px-6 py-3 rounded-xl hover:bg-rose-50 dark:hover:bg-slate-800 transition-colors"
                   >
-                    Wyślij kolejną wiadomość
+                    {i18n.language === 'pl' ? 'Wyślij kolejną wiadomość' : 'Send another message'}
                   </button>
                 </motion.div>
               ) : null}
@@ -205,12 +164,14 @@ export function Contact() {
               <form onSubmit={handleSubmit} className={`space-y-5 transition-opacity ${formState === "submitting" ? "opacity-50 pointer-events-none" : ""}`}>
                 
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 font-light">
-                  Zostaw swoje dane i krótko opisz projekt. Odezwę się w ciągu 4h roboczych z propozycją terminu bezpłatnej konsultacji.
+                  {i18n.language === 'pl'
+                    ? 'Zostaw swoje dane i krótko opisz projekt. Odezwę się w ciągu 4h roboczych z propozycją terminu bezpłatnej konsultacji.'
+                    : 'Leave your contact details and briefly describe the project. I will contact you within 4 business hours with a proposal for a free consultation.'}
                 </p>
 
                 <div>
                   <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
-                    Imię i Nazwisko
+                    {i18n.language === 'pl' ? 'Imię i Nazwisko' : 'Full Name'}
                   </label>
                   <input
                     type="text"
@@ -219,13 +180,13 @@ export function Contact() {
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 hover:border-slate-300 dark:hover:border-slate-600 transition-all"
-                    placeholder="Jan Kowalski"
+                    placeholder={i18n.language === 'pl' ? "Jan Kowalski" : "John Doe"}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
-                    Twój Email
+                    {i18n.language === 'pl' ? 'Twój Email' : 'Your Email'}
                   </label>
                   <input
                     type="email"
@@ -240,7 +201,7 @@ export function Contact() {
 
                 <div>
                   <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
-                    Krótko o projekcie
+                    {i18n.language === 'pl' ? 'Krótko o projekcie' : 'Briefly about the project'}
                   </label>
                   <textarea
                     id="message"
@@ -249,7 +210,7 @@ export function Contact() {
                     value={formData.message}
                     onChange={(e) => setFormData({...formData, message: e.target.value})}
                     className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 hover:border-slate-300 dark:hover:border-slate-600 transition-all resize-none"
-                    placeholder="Cześć, potrzebuję landing page dla..."
+                    placeholder={i18n.language === 'pl' ? "Cześć, potrzebuję landing page dla..." : "Hi, I need a landing page for..."}
                   />
                 </div>
 
@@ -262,11 +223,11 @@ export function Contact() {
                     {formState === "submitting" ? (
                       <>
                         <Loader2 className="h-5 w-5 animate-spin" />
-                        Wysyłanie...
+                        {i18n.language === 'pl' ? 'Wysyłanie...' : 'Sending...'}
                       </>
                     ) : (
                       <>
-                        Wyślij zapytanie
+                        {i18n.language === 'pl' ? 'Wyślij zapytanie' : 'Send inquiry'}
                         <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
@@ -277,14 +238,10 @@ export function Contact() {
                 </button>
                 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-6 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Odpowiedź w 4h robocze</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> {i18n.language === 'pl' ? 'Odpowiedź w 4h robocze' : 'Response in 4h'}</span>
                   <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                  <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Bezpłatna konsultacja</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> {i18n.language === 'pl' ? 'Bezpłatna konsultacja' : 'Free consultation'}</span>
                 </div>
-
-                <p className="text-[10px] text-center text-slate-500 dark:text-slate-400 mt-6 font-light">
-                  Ta strona jest chroniona przez reCAPTCHA i obowiązują ją <a href="https://policies.google.com/privacy" className="underline hover:text-slate-600 dark:hover:text-slate-300">Polityka Prywatności</a> oraz <a href="https://policies.google.com/terms" className="underline hover:text-slate-600 dark:hover:text-slate-300">Warunki Korzystania</a> Google.
-                </p>
               </form>
             </motion.div>
           </div>
@@ -292,4 +249,4 @@ export function Contact() {
       </div>
     </section>
   );
-}
+};
