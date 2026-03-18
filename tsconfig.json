@@ -27,6 +27,7 @@
     "node_modules",
     "dist",
     "mcp-servers",
-    "portfolio-backend"
+    "portfolio-backend",
+    "ui-expert-mcp-main"
   ]
 }
