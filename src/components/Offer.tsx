@@ -121,7 +121,7 @@ export const Offer = () => {
       price: t('offer.fallback.landing.price'),
       deliveryTime: t('offer.fallback.landing.timeline'),
       icon: 'Rocket',
-      isPopular: true,
+      isPopular: false,
       features: [
         { feature: t('offer.fallback.landing.feat1'), status: 'included' },
         { feature: t('offer.fallback.landing.feat2'), status: 'included' },
@@ -137,12 +137,13 @@ export const Offer = () => {
       price: t('offer.fallback.business.price'),
       deliveryTime: t('offer.fallback.business.timeline'),
       icon: 'Crown',
+      isPopular: true,
       features: [
         { feature: t('offer.fallback.business.feat1'), status: 'included' },
         { feature: t('offer.fallback.business.feat2'), status: 'included' },
         { feature: t('offer.fallback.business.feat3'), status: 'included' },
         { feature: t('offer.fallback.business.feat4'), status: 'included' },
-        { feature: t('offer.fallback.business.feat5'), status: 'included' }
+        { feature: t('offer.fallback.business.feat5'), status: 'excluded' }
       ]
     },
     {
@@ -182,8 +183,8 @@ export const Offer = () => {
   return (
     <section className="transition-colors duration-500 relative overflow-hidden" id="offer">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto mb-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-5xl mx-auto mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -209,7 +210,7 @@ export const Offer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-3xl mx-auto"
+            className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-4xl mx-auto"
           >
             {t('offer.subtext')}
           </motion.p>

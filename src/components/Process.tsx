@@ -86,7 +86,7 @@ export const Process = () => {
   return (
     <section className="relative overflow-hidden transition-colors duration-300" id="process">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-20 flex flex-col items-center">
+        <div className="max-w-5xl mx-auto text-center mb-20 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -112,13 +112,13 @@ export const Process = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-3xl mx-auto"
           >
             {t('process.subtext')}
           </motion.p>
         </div>
 
-        <div className="relative max-w-5xl mx-auto">
+        <div className="relative max-w-7xl mx-auto">
           {/* Vertical Line (Desktop only) */}
           <div className="hidden md:block absolute left-1/2 -ml-px top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800/50" />
 

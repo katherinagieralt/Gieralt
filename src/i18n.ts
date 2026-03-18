@@ -107,33 +107,33 @@ i18n
                 desc: "Błyskawiczna sprzedaż i wizerunek. Idealna dla nowych produktów lub usług, które potrzebują mocnego wejścia.",
                 price: "od 4 900 PLN",
                 timeline: "3-5 dni",
-                feat1: "High-impact single page",
-                feat2: "Flawless mobile design",
-                feat3: "Email system integration",
-                feat4: "Panel edycji treści",
-                feat5: "Wiele podstron i blog"
+                feat1: "Strategia UX & Copywriting",
+                feat2: "Dedykowany Design Premium",
+                feat3: "Podstawowa Analityka (GA4)",
+                feat4: "System Zarządzania CMS",
+                feat5: "Automatyzacje procesów AI"
               },
               business: {
                 name: "Portal Biznesowy 3.0",
                 desc: "Twoja cyfrowa siedziba. Skalowalna platforma dla firm, które chcą dominować na rynku.",
                 price: "od 12 000 PLN",
                 timeline: "10-14 dni",
-                feat1: "Dedykowana architektura",
-                feat2: "System zarządzania treścią",
-                feat3: "Optymalizacja pod SEO",
-                feat4: "Analityka konwersji",
-                feat5: "Automatyzacja procesów"
+                feat1: "Dedykowana Architektura (Payload)",
+                feat2: "Modułowa Budowa (Skalowalność)",
+                feat3: "Zaawansowane SEO (Semantyka)",
+                feat4: "Interaktywne Komponenty",
+                feat5: "Modelowanie AI / Agenci AI"
               },
               ecommerce: {
                 name: "E-commerce Elite",
                 desc: "Maszyna do zarabiania. Sklep, który usuwa wszelkie bariery zakupowe Twoich klientów.",
                 price: "od 20 000 PLN",
                 timeline: "21-30 dni",
-                feat1: "User-centric shopping flow",
-                feat2: "Płatności i logistyka",
-                feat3: "System lojalnościowy",
-                feat4: "Personalizacja ofert AI",
-                feat5: "Zarządzanie stanami"
+                feat1: "High-Conversion Checkout Flow",
+                feat2: "Automatyzacja Marketingu (Email)",
+                feat3: "System Lojalnościowy / Kupony",
+                feat4: "Integracja AI: Rekomendacje",
+                feat5: "Panel Zarządzania Sprzedażą"
               }
             },
             cta: {
@@ -488,33 +488,33 @@ i18n
                 desc: "Instant sales and image. Perfect for new products or services that need a strong entry.",
                 price: "from 4,900 PLN",
                 timeline: "3-5 days",
-                feat1: "High-impact single page",
-                feat2: "Flawless mobile design",
-                feat3: "Email system integration",
-                feat4: "Content editing panel",
-                feat5: "Multiple subpages & blog"
+                feat1: "UX Strategy & Copywriting",
+                feat2: "Dedicated Premium Design",
+                feat3: "Basic Analytics (GA4)",
+                feat4: "CMS Management System",
+                feat5: "AI Process Automations"
               },
               business: {
                 name: "Business Portal 3.0",
                 desc: "Your digital headquarters. Scalable platform for companies that want to dominate the market.",
                 price: "from 12,000 PLN",
                 timeline: "10-14 days",
-                feat1: "Dedicated architecture",
-                feat2: "Content management system",
-                feat3: "SEO optimization",
-                feat4: "Conversion analytics",
-                feat5: "Process automation"
+                feat1: "Dedicated Architecture (Payload)",
+                feat2: "Modular Build (Scalability)",
+                feat3: "Advanced SEO (Semantics)",
+                feat4: "Interactive Components",
+                feat5: "AI Modeling / AI Agents"
               },
               ecommerce: {
                 name: "E-commerce Elite",
                 desc: "The money-making machine. A store that removes all purchase barriers for your customers.",
                 price: "from 20,000 PLN",
                 timeline: "21-30 days",
-                feat1: "User-centric shopping flow",
-                feat2: "Payments & logistics",
-                feat3: "Loyalty system",
-                feat4: "AI offer personalization",
-                feat5: "Inventory management"
+                feat1: "High-Conversion Checkout Flow",
+                feat2: "Marketing Automation (Email)",
+                feat3: "Loyalty System / Coupons",
+                feat4: "AI Integration: Recommendations",
+                feat5: "Sales Management Panel"
               }
             },
             cta: {

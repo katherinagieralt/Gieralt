@@ -1,12 +1,14 @@
 import React, { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Mail, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { Mail, ArrowRight, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PremiumButton } from "./PremiumButton";
+import { useSubmitInquiry } from "../hooks/usePayload";
 
 export const Contact = () => {
   const { t, i18n } = useTranslation();
-  const [formState, setFormState] = useState<"idle" | "submitting" | "success">("idle");
+  const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const { mutate: submitInquiry } = useSubmitInquiry();
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -23,11 +25,24 @@ export const Contact = () => {
     if (!emailRegex.test(formData.email)) return;
     
     setFormState("submitting");
-    setTimeout(() => {
-      setFormState("success");
-      setFormData({ name: "", email: "", message: "", consent: false });
-      setTimeout(() => setFormState("idle"), 8000);
-    }, 2000);
+    
+    submitInquiry({
+      name: formData.name,
+      email: formData.email,
+      subject: `Wiadomość z portfolio od ${formData.name}`,
+      message: formData.message,
+      source: 'Contact Form 4.2 (Gieralt)'
+    }, {
+      onSuccess: () => {
+        setFormState("success");
+        setFormData({ name: "", email: "", message: "", consent: false });
+        setTimeout(() => setFormState("idle"), 8000);
+      },
+      onError: () => {
+        setFormState("error");
+        setTimeout(() => setFormState("idle"), 5000);
+      }
+    });
   };
 
   return (
@@ -35,7 +50,7 @@ export const Contact = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Strict 12-Column Grid Wrapper */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Header Block: On Grid Centered */}
           <div className="lg:col-span-12 text-center mb-16">
@@ -100,6 +115,27 @@ export const Contact = () => {
                      </h3>
                      <p className="text-zinc-500 dark:text-zinc-400 font-light max-w-xs mb-10">
                         {t('contact.form.success.desc')}
+                     </p>
+                     <PremiumButton onClick={() => setFormState("idle")} className="px-10">
+                        {t('contact.form.success.cta')}
+                     </PremiumButton>
+                  </motion.div>
+                ) : formState === "error" ? (
+                  <motion.div
+                    key="error"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="flex flex-col items-center justify-center text-center py-12"
+                  >
+                     <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center text-rose-500 mb-8 border border-rose-500/20">
+                        <AlertCircle strokeWidth={1.5} className="h-10 w-10" />
+                     </div>
+                     <h3 className="text-3xl font-display font-bold text-zinc-900 dark:text-white mb-4">
+                        {t('common.error')}
+                     </h3>
+                     <p className="text-zinc-500 dark:text-zinc-400 font-light max-w-xs mb-10">
+                        {t('app.error.checkConnection')}
                      </p>
                      <PremiumButton onClick={() => setFormState("idle")} className="px-10">
                         {t('contact.form.success.cta')}

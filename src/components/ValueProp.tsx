@@ -38,7 +38,7 @@ export const ValueProp = () => {
   return (
     <section className="transition-colors duration-500 relative overflow-hidden min-h-[90vh] flex flex-col justify-center">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
         
         {/* Editorial Header - Aligned with the site's design system */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-end mb-20">

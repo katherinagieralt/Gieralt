@@ -34,7 +34,7 @@ export const FAQ = () => {
     <section className="transition-colors duration-500 relative overflow-hidden" id="faq">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           
           {/* Left Column: Editorial Header */}
           <div className="lg:col-span-5 flex flex-col items-start">
@@ -62,7 +62,7 @@ export const FAQ = () => {
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                transition={{ duration: 0.8, delay: 0.1 }}
-               className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed mb-12 max-w-sm"
+               className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed mb-12 max-w-md"
              >
                {t('faq.subtext')}
              </motion.p>

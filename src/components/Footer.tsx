@@ -52,7 +52,7 @@ export const Footer = ({ onOpenPrivacy, onOpenTerms }: FooterProps) => {
             <h3 className="text-3xl sm:text-4xl font-display font-medium text-zinc-900 dark:text-white mb-6">
               Katarzyna Gierałt
             </h3>
-            <p className="text-zinc-600 dark:text-zinc-400 text-lg font-light leading-relaxed mb-8 max-w-sm">
+            <p className="text-zinc-600 dark:text-zinc-400 text-lg font-light leading-relaxed mb-8 max-w-md">
               {t('footer.brandDesc')}
             </p>
             <a 

@@ -26,12 +26,12 @@ export function ImpactSection() {
   return (
     <section className="transition-colors duration-500 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full bg-rose-500/[0.02] dark:bg-rose-500/[0.05] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full bg-rose-500/[0.02] dark:bg-rose-500/[0.05] blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Trust & Stats Header */}
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-12 mb-24">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

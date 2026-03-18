@@ -10,16 +10,10 @@ export const About: GlobalConfig = {
   },
   fields: [
     {
-      name: 'biographyPL',
+      name: 'biography',
       type: 'richText',
       required: true,
-      label: 'Biography (PL)',
-    },
-    {
-      name: 'biographyEN',
-      type: 'richText',
-      required: true,
-      label: 'Biography (EN)',
+      localized: true,
     },
     {
       name: 'profileImage',
@@ -32,12 +26,9 @@ export const About: GlobalConfig = {
       type: 'array',
       fields: [
         {
-          name: 'labelPL',
+          name: 'label',
           type: 'text',
-        },
-        {
-          name: 'labelEN',
-          type: 'text',
+          localized: true,
         },
         {
           name: 'value',

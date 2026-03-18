@@ -14,6 +14,7 @@ export const Projects: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'category',
@@ -28,16 +29,10 @@ export const Projects: CollectionConfig = {
       ],
     },
     {
-      name: 'descriptionPL',
+      name: 'description',
       type: 'textarea',
       required: true,
-      label: 'Description (PL)',
-    },
-    {
-      name: 'descriptionEN',
-      type: 'textarea',
-      required: true,
-      label: 'Description (EN)',
+      localized: true,
     },
     {
       name: 'image',
@@ -57,6 +52,7 @@ export const Projects: CollectionConfig = {
         {
           name: 'tag',
           type: 'text',
+          localized: true,
         },
       ],
     },

@@ -13,23 +13,19 @@ export const Testimonials: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'role',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
-      name: 'contentPL',
+      name: 'content',
       type: 'textarea',
       required: true,
-      label: 'Content (PL)',
-    },
-    {
-      name: 'contentEN',
-      type: 'textarea',
-      required: true,
-      label: 'Content (EN)',
+      localized: true,
     },
     {
       name: 'avatar',

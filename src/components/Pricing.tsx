@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Check, Zap, Rocket, Crown } from "lucide-react";
+import { Check, Zap, Rocket, Crown, XCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PremiumButton } from "./PremiumButton";
 import { usePlans } from "../hooks/usePayload";
@@ -13,33 +13,53 @@ export const Pricing = () => {
   const fallbackPlans = [
     {
       id: 'fallback-1',
-      namePL: 'Start-Up',
-      nameEN: 'Start-Up',
-      descriptionPL: 'Idealny dla małych firm i freelancerów.',
-      descriptionEN: 'Ideal for small businesses and freelancers.',
-      price: '2900 zł',
-      deliveryTime: '7 dni',
+      namePL: 'Premium Landing',
+      nameEN: 'Premium Landing',
+      descriptionPL: 'Błyskawiczna sprzedaż i wizerunek premium.',
+      descriptionEN: 'Instant sales and premium branding.',
+      price: '4 900 PLN',
+      deliveryTime: '3-5 dni',
       isPopular: false,
       features: [
-        { feature: 'Landing Page UX/UI' },
-        { feature: 'Responsywny Design' },
-        { feature: 'Podstawowe SEO' }
+        { feature: 'Strategia UX & Copywriting', status: 'included' },
+        { feature: 'Dedykowany Design Premium', status: 'included' },
+        { feature: 'Podstawowa Analityka (GA4)', status: 'included' },
+        { feature: 'System Zarządzania CMS', status: 'excluded' },
+        { feature: 'Automatyzacje procesów AI', status: 'excluded' }
       ]
     },
     {
       id: 'fallback-2',
-      namePL: 'Pro Growth',
-      nameEN: 'Pro Growth',
-      descriptionPL: 'Kompleksowe rozwiązanie dla rosnących marek.',
-      descriptionEN: 'Comprehensive solution for growing brands.',
-      price: '5500 zł',
-      deliveryTime: '14 dni',
+      namePL: 'Business Portal 3.0',
+      nameEN: 'Business Portal 3.0',
+      descriptionPL: 'Skalowalna platforma dla Twojej firmy.',
+      descriptionEN: 'Scalable platform for your business.',
+      price: '12 000 PLN',
+      deliveryTime: '10-14 dni',
       isPopular: true,
       features: [
-        { feature: 'Rozbudowany UX Audit' },
-        { feature: 'Pełen Design System' },
-        { feature: 'Integracja z AI' },
-        { feature: 'Zaawansowane SEO' }
+        { feature: 'Dedykowana Architektura (Payload)', status: 'included' },
+        { feature: 'Modułowa Budowa (Skalowalność)', status: 'included' },
+        { feature: 'Zaawansowane SEO (Semantyka)', status: 'included' },
+        { feature: 'Interaktywne Komponenty', status: 'included' },
+        { feature: 'Modelowanie AI / Agenci AI', status: 'excluded' }
+      ]
+    },
+    {
+      id: 'fallback-3',
+      namePL: 'E-commerce Elite',
+      nameEN: 'E-commerce Elite',
+      descriptionPL: 'Najwyższej klasy sklep internetowy.',
+      descriptionEN: 'High-end online store.',
+      price: '20 000 PLN',
+      deliveryTime: '21-30 dni',
+      isPopular: false,
+      features: [
+        { feature: 'High-Conversion Checkout Flow', status: 'included' },
+        { feature: 'Automatyzacja Marketingu (Email)', status: 'included' },
+        { feature: 'System Lojalnościowy / Kupony', status: 'included' },
+        { feature: 'Integracja AI: Rekomendacje', status: 'included' },
+        { feature: 'Panel Zarządzania Sprzedażą', status: 'included' }
       ]
     }
   ];
@@ -69,7 +89,7 @@ export const Pricing = () => {
   return (
     <section className="relative overflow-hidden transition-colors duration-300" id="pricing">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-12 flex flex-col items-center">
+        <div className="max-w-5xl mx-auto text-center mb-12 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -99,7 +119,7 @@ export const Pricing = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 font-light leading-relaxed max-w-3xl mx-auto"
           >
             {isPl
               ? 'Wybierz pakiet dopasowany do etapu Twojego biznesu. Bez ukrytych kosztów.'
@@ -107,7 +127,7 @@ export const Pricing = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-end">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-end">
           {displayPlans.map((plan: any, index: number) => {
             const Icon = getIcon(index);
             const stylisticClasses = getColorClasses(index);
@@ -158,12 +178,21 @@ export const Pricing = () => {
                 </div>
 
                 <ul className="space-y-4 mb-10 flex-1">
-                  {plan.features?.map((item: any, i: number) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-zinc-600 dark:text-zinc-300 font-light">
-                      <Check className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
-                      <span className="leading-relaxed">{item.feature}</span>
-                    </li>
-                  ))}
+                  {plan.features?.map((item: any, i: number) => {
+                    const isExcluded = item.status === 'excluded';
+                    return (
+                      <li key={i} className={`flex items-start gap-3 text-sm font-light ${isExcluded ? 'text-zinc-400 dark:text-zinc-600' : 'text-zinc-600 dark:text-zinc-300'}`}>
+                        {isExcluded ? (
+                          <XCircle className="h-5 w-5 text-zinc-300 dark:text-zinc-700 shrink-0 mt-0.5" />
+                        ) : (
+                          <Check className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
+                        )}
+                        <span className={`leading-relaxed ${isExcluded ? 'line-through decoration-zinc-200 dark:decoration-zinc-800' : ''}`}>
+                          {item.feature}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 <PremiumButton 

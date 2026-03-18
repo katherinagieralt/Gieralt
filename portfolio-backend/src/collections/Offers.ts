@@ -3,36 +3,24 @@ import type { CollectionConfig } from 'payload'
 export const Offers: CollectionConfig = {
   slug: 'offers',
   admin: {
-    useAsTitle: 'namePL',
-    defaultColumns: ['namePL', 'price', 'updatedAt'],
+    useAsTitle: 'name',
+    defaultColumns: ['name', 'price', 'updatedAt'],
   },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'namePL',
+      name: 'name',
       type: 'text',
       required: true,
-      label: 'Name (PL)',
+      localized: true,
     },
     {
-      name: 'nameEN',
-      type: 'text',
-      required: true,
-      label: 'Name (EN)',
-    },
-    {
-      name: 'descriptionPL',
+      name: 'description',
       type: 'textarea',
       required: true,
-      label: 'Description (PL)',
-    },
-    {
-      name: 'descriptionEN',
-      type: 'textarea',
-      required: true,
-      label: 'Description (EN)',
+      localized: true,
     },
     {
       name: 'price',
@@ -69,6 +57,7 @@ export const Offers: CollectionConfig = {
           name: 'feature',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'status',
@@ -90,6 +79,7 @@ export const Offers: CollectionConfig = {
         {
           name: 'step',
           type: 'text',
+          localized: true,
         },
       ],
     },

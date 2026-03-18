@@ -13,6 +13,7 @@ import { Projects } from './collections/Projects'
 import { Testimonials } from './collections/Testimonials'
 import { Plans } from './collections/Plans'
 import { Offers } from './collections/Offers'
+import { Inquiries } from './collections/Inquiries'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { About } from './globals/About'
@@ -67,9 +68,17 @@ export default buildConfig({
       url: process.env.DATABASE_URL || 'file:./payload.db',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Projects, Testimonials, Plans, Offers],
+  collections: [Pages, Posts, Media, Categories, Users, Projects, Testimonials, Plans, Offers, Inquiries],
   cors: [getServerSideURL(), 'http://localhost:5173'].filter(Boolean),
   globals: [Header, Footer, About],
+  localization: {
+    locales: [
+      { label: 'Polish', code: 'pl' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'pl',
+    fallback: true,
+  },
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

@@ -76,6 +76,7 @@ export interface Config {
     testimonials: Testimonial;
     plans: Plan;
     offers: Offer;
+    inquiries: Inquiry;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -102,6 +103,7 @@ export interface Config {
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     plans: PlansSelect<false> | PlansSelect<true>;
     offers: OffersSelect<false> | OffersSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -116,7 +118,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('pl' | 'en') | ('pl' | 'en')[];
   globals: {
     header: Header;
     footer: Footer;
@@ -127,7 +129,7 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
   };
-  locale: null;
+  locale: 'pl' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -799,8 +801,7 @@ export interface Project {
   id: number;
   title: string;
   category: 'SaaS' | 'FinTech' | 'eCommerce' | 'AI Tools' | 'Mobile App';
-  descriptionPL: string;
-  descriptionEN: string;
+  description: string;
   image: number | Media;
   link?: string | null;
   tags?:
@@ -820,8 +821,7 @@ export interface Testimonial {
   id: number;
   name: string;
   role: string;
-  contentPL: string;
-  contentEN: string;
+  content: string;
   avatar?: (number | null) | Media;
   projectImage?: (number | null) | Media;
   linkedInUrl?: string | null;
@@ -856,10 +856,8 @@ export interface Plan {
  */
 export interface Offer {
   id: number;
-  namePL: string;
-  nameEN: string;
-  descriptionPL: string;
-  descriptionEN: string;
+  name: string;
+  description: string;
   price: string;
   deliveryTime: string;
   isPopular?: boolean | null;
@@ -877,6 +875,24 @@ export interface Offer {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  /**
+   * Page or form variant where the inquiry was sent from
+   */
+  source?: string | null;
+  status?: ('new' | 'processing' | 'done' | 'spam') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1105,6 +1121,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'offers';
         value: number | Offer;
+      } | null)
+    | ({
+        relationTo: 'inquiries';
+        value: number | Inquiry;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1478,8 +1498,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
   category?: T;
-  descriptionPL?: T;
-  descriptionEN?: T;
+  description?: T;
   image?: T;
   link?: T;
   tags?:
@@ -1498,8 +1517,7 @@ export interface ProjectsSelect<T extends boolean = true> {
 export interface TestimonialsSelect<T extends boolean = true> {
   name?: T;
   role?: T;
-  contentPL?: T;
-  contentEN?: T;
+  content?: T;
   avatar?: T;
   projectImage?: T;
   linkedInUrl?: T;
@@ -1532,10 +1550,8 @@ export interface PlansSelect<T extends boolean = true> {
  * via the `definition` "offers_select".
  */
 export interface OffersSelect<T extends boolean = true> {
-  namePL?: T;
-  nameEN?: T;
-  descriptionPL?: T;
-  descriptionEN?: T;
+  name?: T;
+  description?: T;
   price?: T;
   deliveryTime?: T;
   isPopular?: T;
@@ -1553,6 +1569,20 @@ export interface OffersSelect<T extends boolean = true> {
         step?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  subject?: T;
+  message?: T;
+  source?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1895,22 +1925,7 @@ export interface Footer {
  */
 export interface About {
   id: number;
-  biographyPL: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  biographyEN: {
+  biography: {
     root: {
       type: string;
       children: {
@@ -1928,8 +1943,7 @@ export interface About {
   profileImage: number | Media;
   stats?:
     | {
-        labelPL?: string | null;
-        labelEN?: string | null;
+        label?: string | null;
         value?: string | null;
         id?: string | null;
       }[]
@@ -1988,14 +2002,12 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
-  biographyPL?: T;
-  biographyEN?: T;
+  biography?: T;
   profileImage?: T;
   stats?:
     | T
     | {
-        labelPL?: T;
-        labelEN?: T;
+        label?: T;
         value?: T;
         id?: T;
       };

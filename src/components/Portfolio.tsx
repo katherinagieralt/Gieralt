@@ -150,8 +150,8 @@ export const Portfolio = () => {
   return (
     <section className="transition-colors duration-500 relative overflow-hidden" id="portfolio">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-4xl mx-auto mb-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-5xl mx-auto mb-24">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -177,7 +177,7 @@ export const Portfolio = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            className="text-xl sm:text-2xl text-zinc-700 dark:text-zinc-300 font-light leading-relaxed max-w-3xl mx-auto"
+            className="text-xl sm:text-2xl text-zinc-700 dark:text-zinc-300 font-light leading-relaxed max-w-4xl mx-auto"
           >
             {t('portfolio.subtext')}
           </motion.p>

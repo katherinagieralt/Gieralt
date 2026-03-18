@@ -33,7 +33,7 @@ export function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           style={{ y: y2, opacity }}
-          className="max-w-4xl mx-auto text-center"
+          className="max-w-5xl mx-auto text-center"
         >
           {/* Availability Badge */}
           <motion.div
@@ -65,7 +65,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 mb-8 leading-relaxed max-w-2xl mx-auto font-light"
+            className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto font-light"
           >
             {t('hero.subtext')}
           </motion.p>

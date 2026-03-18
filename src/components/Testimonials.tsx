@@ -59,7 +59,7 @@ export const Testimonials = () => {
           </h2>
         </div>
 
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative">
            <Quote className="absolute -top-12 -left-12 h-24 w-24 text-white/5 hidden lg:block" />
            
            <AnimatePresence mode="wait">
