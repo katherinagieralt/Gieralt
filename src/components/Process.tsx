@@ -1,19 +1,16 @@
-import React from 'react';
 import { motion } from "motion/react";
 import { FileText, Layout, Code, Rocket, Palette } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const Process = () => {
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const steps = [
     {
-      stage: i18n.language === 'pl' ? "Etap 1" : "Stage 1",
-      title: i18n.language === 'pl' ? "Warsztat i Strategia" : "Workshop & Strategy",
-      desc: i18n.language === 'pl' 
-        ? "Nie rysuję bez planu. Zaczynamy od głębokiego zrozumienia Twojego biznesu i celów."
-        : "I don't draw without a plan. We start with a deep understanding of your business and goals.",
-      deliverable: i18n.language === 'pl' ? "Strategia Konwersji" : "Conversion Strategy",
+      stage: t('process.steps.s1.stage'),
+      title: t('process.steps.s1.title'),
+      desc: t('process.steps.s1.desc'),
+      deliverable: t('process.steps.s1.deliverable'),
       icon: FileText,
       theme: {
         bg: "bg-blue-600",
@@ -25,12 +22,10 @@ export const Process = () => {
       },
     },
     {
-      stage: i18n.language === 'pl' ? "Etap 2" : "Stage 2",
-      title: i18n.language === 'pl' ? "Architektura i Copywriting" : "Architecture & Copywriting",
-      desc: i18n.language === 'pl'
-        ? "Słowa sprzedają, design oprawia. Tworzymy strukturę, która prowadzi klienta za rękę do zakupu."
-        : "Words sell, design frames. We create a structure that leads the customer hand-in-hand to purchase.",
-      deliverable: i18n.language === 'pl' ? "Makieta i Treści" : "Wireframes & Content",
+      stage: t('process.steps.s2.stage'),
+      title: t('process.steps.s2.title'),
+      desc: t('process.steps.s2.desc'),
+      deliverable: t('process.steps.s2.deliverable'),
       icon: Layout,
       theme: {
         bg: "bg-purple-600",
@@ -42,12 +37,10 @@ export const Process = () => {
       },
     },
     {
-      stage: i18n.language === 'pl' ? "Etap 3" : "Stage 3",
-      title: i18n.language === 'pl' ? "Visual Design" : "Visual Design",
-      desc: i18n.language === 'pl'
-        ? "Pixel-perfect UI. Projektuję interfejsy, które budują zaufanie i pozycjonują Cię jako lidera."
-        : "Pixel-perfect UI. I design interfaces that build trust and position you as a leader.",
-      deliverable: i18n.language === 'pl' ? "Projekt Graficzny" : "Graphic Design",
+      stage: t('process.steps.s3.stage'),
+      title: t('process.steps.s3.title'),
+      desc: t('process.steps.s3.desc'),
+      deliverable: t('process.steps.s3.deliverable'),
       icon: Palette,
       theme: {
         bg: "bg-rose-600",
@@ -59,12 +52,10 @@ export const Process = () => {
       },
     },
     {
-      stage: i18n.language === 'pl' ? "Etap 4" : "Stage 4",
-      title: i18n.language === 'pl' ? "Wdrożenie No-Code" : "No-Code Development",
-      desc: i18n.language === 'pl'
-        ? "Dostajesz gotowy, błyskawicznie działający produkt (Framer/Webflow), a nie tylko ładne obrazki."
-        : "You get a ready, lightning-fast product (Framer/Webflow), not just pretty pictures.",
-      deliverable: i18n.language === 'pl' ? "Działająca Strona" : "Working Website",
+      stage: t('process.steps.s4.stage'),
+      title: t('process.steps.s4.title'),
+      desc: t('process.steps.s4.desc'),
+      deliverable: t('process.steps.s4.deliverable'),
       icon: Code,
       theme: {
         bg: "bg-amber-600",
@@ -76,12 +67,10 @@ export const Process = () => {
       },
     },
     {
-      stage: i18n.language === 'pl' ? "Etap 5" : "Stage 5",
-      title: i18n.language === 'pl' ? "Optymalizacja" : "Optimization",
-      desc: i18n.language === 'pl'
-        ? "Uczę Cię, jak obsługiwać Twoją nową maszynę do zarabiania i wyciskać z niej maksimum."
-        : "I teach you how to operate your new money-making machine and squeeze the maximum out of it.",
-      deliverable: i18n.language === 'pl' ? "Szkolenie i Przekazanie" : "Training & Handover",
+      stage: t('process.steps.s5.stage'),
+      title: t('process.steps.s5.title'),
+      desc: t('process.steps.s5.desc'),
+      deliverable: t('process.steps.s5.deliverable'),
       icon: Rocket,
       theme: {
         bg: "bg-emerald-600",
@@ -95,90 +84,89 @@ export const Process = () => {
   ];
 
   return (
-    <section className="bg-white dark:bg-slate-950 py-16 relative overflow-hidden transition-colors duration-300" id="process">
-      {/* Premium Background Effects */}
-      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-rose-500/5 dark:bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-0 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 blur-[150px] rounded-full pointer-events-none" />
-
+    <section className="relative overflow-hidden transition-colors duration-300" id="process">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-12 flex flex-col items-center">
+        <div className="max-w-3xl mx-auto text-center mb-20 flex flex-col items-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-500 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/20 bg-rose-500/10 text-rose-500 uppercase tracking-[0.3em] font-bold text-[10px] mb-10 shadow-sm"
           >
-            {i18n.language === 'pl' ? 'Proces' : 'Process'}
+            <span>{t('process.badge')}</span>
           </motion.div>
           
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl lg:text-4xl font-display font-light text-slate-900 dark:text-white mb-8 leading-tight tracking-tight relative"
+            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
+            className="text-4xl sm:text-5xl font-display font-light text-zinc-900 dark:text-white tracking-tighter mb-8 relative"
           >
-            {i18n.language === 'pl' ? (
-              <>Twój projekt w 5 kluczowych etapach. <br />
-              <span className="font-bold text-gradient">Metoda Design Sprint.</span></>
-            ) : (
-              <>Your project in 5 key stages. <br />
-              <span className="font-bold text-gradient">The Design Sprint method.</span></>
-            )}
+            {t('process.title.line1')} <span className="font-bold text-gradient">{t('process.title.highlight')}</span> <br />
+            <span className="text-2xl sm:text-3xl opacity-80">{t('process.title.subtitle')}</span>
           </motion.h2>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-lg sm:text-xl text-slate-700 dark:text-slate-300 font-light leading-relaxed max-w-2xl mx-auto"
+            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
+            className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 font-light leading-relaxed max-w-2xl mx-auto"
           >
-            {i18n.language === 'pl' 
-              ? "Zamiast niekończących się poprawek – konkretny plan. Wiesz dokładnie, co otrzymasz na każdym etapie współpracy."
-              : "Instead of endless revisions - a concrete plan. You know exactly what you will receive at every stage of cooperation."}
+            {t('process.subtext')}
           </motion.p>
         </div>
 
         <div className="relative max-w-5xl mx-auto">
           {/* Vertical Line (Desktop only) */}
-          <div className="hidden md:block absolute left-1/2 -ml-px top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-800" />
+          <div className="hidden md:block absolute left-1/2 -ml-px top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800/50" />
 
           {/* Steps Container */}
-          <div className="flex overflow-x-auto md:overflow-visible md:flex-col gap-6 md:gap-16 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex flex-col gap-12 md:gap-24">
             {steps.map((step, index) => (
               <motion.div
-                key={step.stage}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={step.title}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: index * 0.15, duration: 0.6, ease: "easeOut" }}
-                className={`relative flex-none w-[85vw] sm:w-[320px] md:w-auto md:flex items-center md:justify-between snap-center ${
-                  index % 2 === 0 ? "md:flex-row-reverse" : ""
+                transition={{ type: "spring", stiffness: 100, damping: 20, delay: index * 0.1 }}
+                className={`relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0 ${
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
                 {/* Icon Marker (Desktop only) */}
-                <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-slate-950 border-4 border-slate-50 dark:border-slate-900 shadow-sm z-10 transition-transform duration-500 hover:scale-110">
+                <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-zinc-950 border-4 border-zinc-50 dark:border-zinc-900 shadow-xl z-10 transition-transform duration-500 hover:scale-125">
                   <div className={`w-4 h-4 rounded-full ${step.theme.bg} shadow-lg`} />
                 </div>
 
                 {/* Content Card */}
-                <div className={`w-full md:w-[45%] p-8 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800/50 rounded-3xl hover:shadow-2xl ${step.theme.shadow} md:hover:-translate-y-2 transition-all duration-500 group backdrop-blur-sm h-full flex flex-col`}>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className={`text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest ${step.theme.text} ${step.theme.lightBg}`}>
+                <div className={`w-full md:w-[45%] p-10 bg-white dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800/50 rounded-[3rem] hover:shadow-2xl ${step.theme.shadow} md:hover:-translate-y-2 transition-all duration-500 group backdrop-blur-3xl`}>
+                  <div className="flex items-center justify-between mb-8">
+                    <span className={`text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest ${step.theme.text} ${step.theme.lightBg}`}>
                       {step.stage}
                     </span>
-                    <div className={`w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center ${step.theme.hoverBg} transition-colors duration-300`}>
-                      <step.icon className={`h-5 w-5 text-slate-400 ${step.theme.groupHoverText} transition-colors`} />
+                    <div className={`w-12 h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center ${step.theme.hoverBg} transition-all duration-500 group-hover:rotate-12`}>
+                      <step.icon className={`h-6 w-6 text-zinc-400 ${step.theme.groupHoverText} transition-colors`} />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-display font-medium text-slate-900 dark:text-white mb-3">{step.title}</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-base font-light leading-relaxed mb-6 flex-grow">{step.desc}</p>
-                  <div className={`flex items-center gap-3 text-xs font-semibold uppercase tracking-wider ${step.theme.text} ${step.theme.lightBg} px-4 py-3 rounded-xl w-fit ${step.theme.hoverBg} transition-colors duration-300 mt-auto`}>
-                    <step.icon className="h-4 w-4 shrink-0" />
-                    <span className="truncate">{i18n.language === 'pl' ? 'WYNIK' : 'DELIVERABLE'}: {step.deliverable}</span>
+                  
+                  <h3 className="text-2xl font-display font-medium text-zinc-900 dark:text-white mb-4 group-hover:text-rose-500 transition-colors duration-300">
+                    {step.title}
+                  </h3>
+                  
+                  <p className="text-zinc-600 dark:text-zinc-400 text-base font-light leading-relaxed mb-8">
+                    {step.desc}
+                  </p>
+                  
+                  <div className={`flex items-center gap-3 text-xs font-bold uppercase tracking-widest ${step.theme.text} ${step.theme.lightBg} px-5 py-3.5 rounded-2xl w-fit ${step.theme.hoverBg} transition-all duration-300 border border-transparent group-hover:border-white/20`}>
+                    <div className="w-2 h-2 rounded-full animate-pulse bg-current" />
+                    <span>{t('process.deliverableLabel')}: {step.deliverable}</span>
                   </div>
                 </div>
+
+                {/* Empty space for the other side on desktop */}
+                <div className="hidden md:block w-[45%]" />
               </motion.div>
             ))}
           </div>

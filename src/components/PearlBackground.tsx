@@ -4,7 +4,7 @@ export function PearlBackground() {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Base Background */}
-      <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950 transition-colors duration-700" />
+      <div className="absolute inset-0 bg-zinc-50 dark:bg-zinc-950 transition-colors duration-700" />
 
       {/* Pearl Sheen Layers - Light Mode */}
       <div className="absolute inset-0 opacity-30 dark:opacity-0 transition-opacity duration-700">
@@ -71,3 +71,5 @@ export function PearlBackground() {
     </div>
   );
 }
+
+

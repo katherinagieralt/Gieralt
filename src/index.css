@@ -32,6 +32,8 @@
   --color-blue-800: #352a5a;
   --color-blue-900: #2d244b;
   --color-blue-950: #1a142e;
+
+  --tracking-tightest: -0.05em;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -42,11 +44,24 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-200;
+    @apply bg-[#fafafa] text-zinc-900 antialiased transition-colors duration-500 dark:bg-[#09090b] dark:text-zinc-200;
+  }
+
+  /* Krok 19: Globalne Focus Ringi dla Dostępności */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    @apply outline-none ring-2 ring-rose-500/50 ring-offset-2 ring-offset-white dark:ring-offset-zinc-950 rounded-sm;
+  }
+
+  ::selection {
+    @apply bg-rose-500/20 text-rose-600 dark:text-rose-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tightest leading-tight;
+  }
+
+  section {
+    @apply py-24 sm:py-32 overflow-hidden border-b border-zinc-200 dark:border-white/5;
   }
 
   .skip-to-content {
@@ -58,11 +73,11 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100 dark:bg-slate-950;
+    @apply bg-zinc-100 dark:bg-zinc-950;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 hover:bg-rose-500 dark:bg-slate-800 dark:hover:bg-rose-500 rounded-full transition-colors;
+    @apply bg-zinc-300 hover:bg-rose-500 dark:bg-zinc-800 dark:hover:bg-rose-500 rounded-full transition-colors;
   }
 }
 
@@ -72,7 +87,10 @@
   }
   
   .glass-card {
-    @apply bg-white/60 backdrop-blur-xl border border-slate-200/50 shadow-xl dark:bg-slate-900/40 dark:border-white/10 dark:shadow-2xl;
+    @apply bg-white/90 dark:bg-zinc-900/40 backdrop-blur-3xl border border-zinc-200/80 dark:border-white/5 rounded-[2.5rem] shadow-2xl shadow-rose-500/5 relative overflow-hidden transition-all duration-500;
+  }
+  .glass-card:hover {
+    @apply border-rose-500/30 shadow-[0_0_40px_rgba(229,95,95,0.1)] -translate-y-1;
   }
 }
 
@@ -89,9 +107,9 @@
 
 /* High Contrast Mode */
 .a11y-high-contrast {
-  --color-slate-50: #ffffff;
-  --color-slate-900: #000000;
-  --color-slate-950: #000000;
+  --color-zinc-50: #ffffff;
+  --color-zinc-900: #000000;
+  --color-zinc-950: #000000;
   --color-rose-500: #ff0000;
 }
 

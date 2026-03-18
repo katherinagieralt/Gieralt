@@ -3,21 +3,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, 
   RotateCcw, 
-  Type, 
   Contrast, 
-  Eye, 
   MousePointer2, 
-  Link as LinkIcon, 
-  Heading, 
   ZapOff, 
-  Layout, 
-  Maximize2,
   Minus,
   Plus
 } from 'lucide-react';
 import { useAccessibility } from './AccessibilityContext';
+import { useTranslation } from 'react-i18next';
 
 export function AccessibilityPanel() {
+  const { t } = useTranslation();
   const { settings, updateSetting, resetSettings, isPanelOpen, setIsPanelOpen } = useAccessibility();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -61,23 +57,23 @@ export function AccessibilityPanel() {
 
   const sections = [
     {
-      title: 'Wizualna personalizacja',
+      title: t('a11y.sections.visual'),
       icon: <Contrast className="w-5 h-5" />,
       controls: [
         {
-          label: 'Kontrast',
+          label: t('a11y.labels.contrast'),
           type: 'select',
           value: settings.contrast,
           options: [
-            { label: 'Normalny', value: 'normal' },
-            { label: 'Wysoki', value: 'high' },
-            { label: 'Ciemny', value: 'dark' },
-            { label: 'Monochromatyczny', value: 'mono' }
+            { label: t('a11y.options.contrast.normal'), value: 'normal' },
+            { label: t('a11y.options.contrast.high'), value: 'high' },
+            { label: t('a11y.options.contrast.dark'), value: 'dark' },
+            { label: t('a11y.options.contrast.mono'), value: 'mono' }
           ],
           onChange: (val: any) => updateSetting('contrast', val)
         },
         {
-          label: 'Rozmiar czcionki',
+          label: t('a11y.labels.fontSize'),
           type: 'range',
           value: settings.fontSize,
           min: 100,
@@ -87,42 +83,42 @@ export function AccessibilityPanel() {
           onChange: (val: number) => updateSetting('fontSize', val)
         },
         {
-          label: 'Rodzaj czcionki',
+          label: t('a11y.labels.fontFamily'),
           type: 'select',
           value: settings.fontFamily,
           options: [
-            { label: 'Domyślna', value: 'default' },
-            { label: 'Bezszeryfowa', value: 'readable' },
-            { label: 'Dla dyslektyków', value: 'dyslexic' }
+            { label: t('a11y.options.fontFamily.default'), value: 'default' },
+            { label: t('a11y.options.fontFamily.readable'), value: 'readable' },
+            { label: t('a11y.options.fontFamily.dyslexic'), value: 'dyslexic' }
           ],
           onChange: (val: any) => updateSetting('fontFamily', val)
         }
       ]
     },
     {
-      title: 'Wsparcie poznawcze',
+      title: t('a11y.sections.cog'),
       icon: <ZapOff className="w-5 h-5" />,
       controls: [
         {
-          label: 'Zatrzymaj animacje',
+          label: t('a11y.labels.stopAnimations'),
           type: 'toggle',
           value: settings.stopAnimations,
           onChange: (val: boolean) => updateSetting('stopAnimations', val)
         },
         {
-          label: 'Maska czytania',
+          label: t('a11y.labels.readingMask'),
           type: 'toggle',
           value: settings.readingMask,
           onChange: (val: boolean) => updateSetting('readingMask', val)
         },
         {
-          label: 'Linia prowadząca',
+          label: t('a11y.labels.readingLine'),
           type: 'toggle',
           value: settings.readingLine,
           onChange: (val: boolean) => updateSetting('readingLine', val)
         },
         {
-          label: 'Tryb minimalistyczny',
+          label: t('a11y.labels.minimalistMode'),
           type: 'toggle',
           value: settings.minimalistMode,
           onChange: (val: boolean) => updateSetting('minimalistMode', val)
@@ -130,29 +126,29 @@ export function AccessibilityPanel() {
       ]
     },
     {
-      title: 'Nawigacja i Interakcja',
+      title: t('a11y.sections.nav'),
       icon: <MousePointer2 className="w-5 h-5" />,
       controls: [
         {
-          label: 'Wizualny Fokus',
+          label: t('a11y.labels.enhancedFocus'),
           type: 'toggle',
           value: settings.enhancedFocus,
           onChange: (val: boolean) => updateSetting('enhancedFocus', val)
         },
         {
-          label: 'Powiększony kursor',
+          label: t('a11y.labels.largeCursor'),
           type: 'toggle',
           value: settings.largeCursor,
           onChange: (val: boolean) => updateSetting('largeCursor', val)
         },
         {
-          label: 'Podświetl linki',
+          label: t('a11y.labels.highlightLinks'),
           type: 'toggle',
           value: settings.highlightLinks,
           onChange: (val: boolean) => updateSetting('highlightLinks', val)
         },
         {
-          label: 'Podświetl nagłówki',
+          label: t('a11y.labels.highlightHeaders'),
           type: 'toggle',
           value: settings.highlightHeaders,
           onChange: (val: boolean) => updateSetting('highlightHeaders', val)
@@ -180,26 +176,26 @@ export function AccessibilityPanel() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="a11y-panel-title"
-          className="relative w-full max-w-md bg-white dark:bg-slate-900 h-full shadow-2xl pointer-events-auto flex flex-col"
+          className="relative w-full max-w-md bg-white dark:bg-zinc-900 h-full shadow-2xl pointer-events-auto flex flex-col"
         >
           {/* Header */}
-          <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white font-bold">
                 AA
               </div>
               <div>
-                <h2 id="a11y-panel-title" className="text-xl font-bold text-slate-900 dark:text-white">Dostępność</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Dostosuj stronę do swoich potrzeb</p>
+                <h2 id="a11y-panel-title" className="text-xl font-bold text-zinc-900 dark:text-white">{t('a11y.title')}</h2>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{t('a11y.subtitle')}</p>
               </div>
             </div>
             <button 
               ref={closeButtonRef}
               onClick={() => setIsPanelOpen(false)}
-              className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               aria-label="Zamknij panel dostępności"
             >
-              <X className="w-6 h-6 text-slate-500" />
+              <X className="w-6 h-6 text-zinc-500" />
             </button>
           </div>
 
@@ -213,15 +209,15 @@ export function AccessibilityPanel() {
                 </div>
                 <div className="grid gap-4">
                   {section.controls.map((control, cIdx) => (
-                    <div key={cIdx} className="flex flex-col gap-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                    <div key={cIdx} className="flex flex-col gap-2 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{control.label}</span>
+                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">{control.label}</span>
                         {control.type === 'toggle' && (
                           <button
                             onClick={() => control.onChange(!control.value)}
                             aria-pressed={control.value}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 ${
-                              control.value ? 'bg-rose-500' : 'bg-slate-300 dark:bg-slate-700'
+                              control.value ? 'bg-rose-500' : 'bg-zinc-300 dark:bg-zinc-700'
                             }`}
                           >
                             <span
@@ -237,11 +233,11 @@ export function AccessibilityPanel() {
                         <div className="flex items-center gap-4 mt-2">
                           <button 
                             onClick={() => control.onChange(Math.max(control.min!, control.value - control.step!))}
-                            className="p-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm"
+                            className="p-1 rounded-lg bg-white dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 shadow-sm"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
-                          <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
                             <div 
                               className="h-full bg-rose-500 transition-all" 
                               style={{ width: `${((control.value - control.min!) / (control.max! - control.min!)) * 100}%` }}
@@ -249,11 +245,11 @@ export function AccessibilityPanel() {
                           </div>
                           <button 
                             onClick={() => control.onChange(Math.min(control.max!, control.value + control.step!))}
-                            className="p-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm"
+                            className="p-1 rounded-lg bg-white dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 shadow-sm"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
-                          <span className="text-xs font-bold text-slate-500 min-w-[3rem] text-right">
+                          <span className="text-xs font-bold text-zinc-500 min-w-[3rem] text-right">
                             {control.value}{control.unit}
                           </span>
                         </div>
@@ -268,7 +264,7 @@ export function AccessibilityPanel() {
                               className={`px-3 py-2 rounded-xl text-xs font-medium transition-all border ${
                                 control.value === opt.value
                                   ? 'bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/20'
-                                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-rose-500/50'
+                                  : 'bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-rose-500/50'
                               }`}
                             >
                               {opt.label}
@@ -284,13 +280,13 @@ export function AccessibilityPanel() {
           </div>
 
           {/* Footer */}
-          <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex gap-4">
+          <div className="p-6 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex gap-4">
             <button
               onClick={resetSettings}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-white dark:hover:bg-slate-800 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold text-sm hover:bg-white dark:hover:bg-zinc-800 transition-all"
             >
               <RotateCcw className="w-4 h-4" />
-              Resetuj ustawienia
+              {t('a11y.reset')}
             </button>
           </div>
         </motion.div>

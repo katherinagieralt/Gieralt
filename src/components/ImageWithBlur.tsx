@@ -32,7 +32,7 @@ export function ImageWithBlur({
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center"
+            className="absolute inset-0 bg-zinc-800 animate-pulse flex items-center justify-center"
           >
             <div className="w-full h-full bg-rose-500/5 backdrop-blur-xl" />
           </motion.div>
@@ -59,3 +59,5 @@ export function ImageWithBlur({
     </div>
   );
 }
+
+

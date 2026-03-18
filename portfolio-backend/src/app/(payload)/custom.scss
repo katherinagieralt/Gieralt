@@ -1,0 +1,53 @@
+:root {
+  --theme-bg: #09090b;
+  --theme-elevation-50: #121214;
+  --theme-elevation-100: #18181b;
+  --theme-elevation-150: #202023;
+  --theme-elevation-200: #27272a;
+  --theme-elevation-250: #3f3f46;
+  --theme-elevation-300: #52525b;
+  
+  --theme-primary-50: #fef2f2;
+  --theme-primary-100: #fee2e2;
+  --theme-primary-200: #fecaca;
+  --theme-primary-300: #fca5a5;
+  --theme-primary-400: #f87171;
+  --theme-primary-500: #e55f5f;
+  --theme-primary-600: #dc2626;
+  --theme-primary-700: #b91c1c;
+  --theme-primary-800: #991b1b;
+  --theme-primary-900: #7f1d1d;
+  
+  --theme-text-50: #fafafa;
+  --theme-text-100: #f4f4f5;
+  --theme-text-200: #e4e4e7;
+  --theme-text-300: #d4d4d8;
+  --theme-text-400: #a1a1aa;
+}
+
+[data-theme='dark'] {
+  --theme-bg: #09090b;
+  --theme-elevation-50: #121214;
+}
+
+/* Custom transitions and scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-elevation-200);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-500);
+}
+
+.payload-admin-panel {
+  font-family: 'Inter', sans-serif;
+}

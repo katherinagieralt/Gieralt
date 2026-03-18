@@ -1,83 +1,109 @@
 import React, { useState, useEffect } from 'react';
-
-// Import Components
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { ImpactSection } from './components/ImpactSection';
-import { About } from './components/About';
-import { AIHuman } from './components/AIHuman';
-import { Process } from './components/Process';
-import { Portfolio } from './components/Portfolio';
-import { Testimonials } from './components/Testimonials';
-import { Pricing } from './components/Pricing';
-import { FAQ } from './components/FAQ';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
-
-// Design System Components
 import { ThemeProvider } from './components/ThemeProvider';
 import { AccessibilityProvider } from './components/AccessibilityContext';
 import { AnalyticsProvider } from './components/AnalyticsProvider';
+import { Navbar } from './components/Navbar';
+import { Hero } from './components/Hero';
+import { ValueProp } from './components/ValueProp';
+import { About } from './components/About';
+import { Portfolio } from './components/Portfolio';
+import { Process } from './components/Process';
+import { Testimonials } from './components/Testimonials';
+import { Offer } from './components/Offer';
+import { Contact } from './components/Contact';
+import { Footer } from './components/Footer';
+import { FAQ } from './components/FAQ';
 import { PearlBackground } from './components/PearlBackground';
 import { ScrollProgress } from './components/ScrollProgress';
 import { AccessibilityPanel } from './components/AccessibilityPanel';
 import { FloatingCTA } from './components/FloatingCTA';
+import { AmbientGlow } from './components/AmbientGlow';
+import Lenis from 'lenis';
+import { useTranslation } from 'react-i18next';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const ErrorBoundary = ({ children, name }: { children: React.ReactNode, name?: string }) => {
+  const { t } = useTranslation();
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      console.error('Caught by ErrorBoundary:', event.error);
+    const handleError = (error: ErrorEvent) => {
+      console.error(`Captured error in ${name || 'unknown'}:`, error);
       setHasError(true);
     };
+
     window.addEventListener('error', handleError);
     return () => window.removeEventListener('error', handleError);
-  }, []);
-  
+  }, [name]);
+
   if (hasError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-6 text-center">
-        <div>
-          <h1 className="text-2xl font-bold mb-4">Ups! Coś poszło nie tak.</h1>
-          <button 
-            onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-rose-500 rounded-full font-bold"
-          >
-            Odśwież stronę
-          </button>
-        </div>
+      <div className="py-12 px-4 text-center bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl m-4">
+        <h2 className="text-xl font-bold mb-2">{t('app.error.sectionFailed', { name })}</h2>
+        <p className="text-sm text-zinc-500">{t('app.error.checkConnection')}</p>
       </div>
     );
   }
-  
+
   return <>{children}</>;
 };
 
 export default function App() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   const handleOpenCalendly = () => {
     // Placeholder for Calendly integration
     console.log('Opening Calendly...');
   };
 
   return (
-    <ErrorBoundary>
-      <AnalyticsProvider>
-        <ThemeProvider>
-          <AccessibilityProvider>
-            <div className="relative min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-200 font-sans antialiased selection:bg-rose-500 selection:text-white">
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AccessibilityProvider>
+          <AnalyticsProvider>
+            <div className="relative min-h-screen bg-[#fafafa] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-200 font-sans antialiased">
+              <AmbientGlow />
               <PearlBackground />
               <ScrollProgress />
               <Navbar />
               <main>
-                <Hero />
-                <ImpactSection />
-                <About />
-                <AIHuman />
+                <ErrorBoundary name="Hero"><Hero /></ErrorBoundary>
+                <ValueProp />
+                <ErrorBoundary name="About"><About /></ErrorBoundary>
                 <Process />
-                <Portfolio />
-                <Testimonials />
-                <Pricing />
+                <ErrorBoundary name="Offer"><Offer /></ErrorBoundary>
+                <ErrorBoundary name="Portfolio"><Portfolio /></ErrorBoundary>
+                <ErrorBoundary name="Testimonials"><Testimonials /></ErrorBoundary>
                 <FAQ />
                 <Contact />
               </main>
@@ -85,9 +111,9 @@ export default function App() {
               <FloatingCTA onOpenCalendly={handleOpenCalendly} />
               <AccessibilityPanel />
             </div>
-          </AccessibilityProvider>
-        </ThemeProvider>
-      </AnalyticsProvider>
-    </ErrorBoundary>
+          </AnalyticsProvider>
+        </AccessibilityProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
