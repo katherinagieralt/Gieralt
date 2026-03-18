@@ -46,7 +46,7 @@ describe('Hero Component', () => {
   it('renders the Hero component properly', () => {
     render(<Hero />);
     
-    // Check main title
-    expect(screen.getByText(/Twoja Strona/i)).toBeInTheDocument();
+    // Check main title (checks for translation key given the mock)
+    expect(screen.getByText(/hero\.headline\.line1/i)).toBeInTheDocument();
   });
 });
